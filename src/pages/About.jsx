@@ -7,6 +7,7 @@ import Reveal from '../components/Reveal'
 import CountUp from '../components/CountUp'
 import { SectionHeading, PageHero, CtaBand } from '../components/ui'
 import { about, lifeGallery } from '../data/site'
+import OrbitCarousel from '../components/ui/orbit-carousel'
 import HalftoneWordmark from '../components/ui/halftone-wordmark-footer'
 import HalftoneLogo from '../components/ui/halftone-logo'
 import PerspectiveTunnelHero from '../components/ui/perspective-tunnel-hero'
@@ -115,22 +116,15 @@ function WhatWeDo() {
   )
 }
 
-const initials = (n) => n.split(' ').filter(Boolean).slice(0, 2).map((x) => x[0]).join('')
-
 function Leadership() {
   return (
     <section id="leadership" className="section scroll-mt-24 bg-pd-mist">
       <div className="container-pd">
-        <SectionHeading eyebrow="Leadership" title={about.leadership.title} body={about.leadership.body} />
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {about.leadership.people.map(([name, role], i) => (
-            <Reveal key={name} delay={(i % 3) * 0.08}>
-              <div className="card group flex items-center gap-5 p-6 transition duration-300 hover:-translate-y-1">
-                <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-pd-gradient font-display text-xl font-bold text-white">{initials(name)}</span>
-                <div><p className="font-display font-semibold">{name}</p><p className="mt-0.5 text-sm text-pd-grey">{role}</p></div>
-              </div>
-            </Reveal>
-          ))}
+        <div className="flex flex-col items-center gap-10 lg:gap-14">
+          <SectionHeading center eyebrow="Leadership" title={about.leadership.title} body={about.leadership.body} />
+          <Reveal className="mx-auto w-full max-w-full overflow-hidden lg:overflow-visible">
+            <OrbitCarousel people={about.leadership.people.map(([name, role, linkedin]) => ({ name, role, linkedin }))} />
+          </Reveal>
         </div>
       </div>
     </section>
@@ -209,15 +203,15 @@ function Life() {
 
 function Certs() {
   return (
-    <section className="section bg-pd-navy text-white">
+    <section className="section bg-white">
       <div className="container-pd">
-        <SectionHeading dark center eyebrow="Credentials" title={about.certs.title} body={about.certs.body} />
+        <SectionHeading center eyebrow="Credentials" title={about.certs.title} body={about.certs.body} />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {[[ShieldCheck, 'ISMS certified', 'ISO/IEC 27001 information security'], [BadgeCheck, 'AI-certified team', 'Active certifications across leading AI platforms'], [Handshake, 'Verified partner', 'Business verification and partnerships']].map(([I, t, d], i) => (
-            <Reveal key={t} delay={i * 0.1}><div className="rounded-2xl border border-white/10 bg-white/5 p-8"><I className="h-8 w-8 text-pd-green" /><h3 className="mt-4 text-lg font-semibold">{t}</h3><p className="mt-2 text-sm text-white/60">{d}</p></div></Reveal>
+            <Reveal key={t} delay={i * 0.1}><div className="card h-full p-8 transition duration-300 hover:-translate-y-1 hover:border-pd-green/40"><span className="flex h-12 w-12 items-center justify-center rounded-xl bg-pd-green/10"><I className="h-6 w-6 text-pd-green" /></span><h3 className="mt-4 text-lg font-semibold">{t}</h3><p className="mt-2 text-sm text-pd-grey">{d}</p></div></Reveal>
           ))}
         </div>
-        <div className="mt-10 text-center"><Link to="/certifications" className="btn btn-ghost">View all certifications<ArrowRight className="h-4 w-4" /></Link></div>
+        <div className="mt-10 text-center"><Link to="/certifications" className="btn btn-outline">View all certifications<ArrowRight className="h-4 w-4" /></Link></div>
       </div>
     </section>
   )
@@ -233,7 +227,8 @@ export default function About() {
       <VisionMission />
       <Values />
       <WhatWeDo />
-      <Leadership />
+      {/* Leadership hidden for now. To show it again, uncomment the next line. */}
+      {/* <Leadership /> */}
       <Ceo />
       <LogoPlay />
       <Way />
