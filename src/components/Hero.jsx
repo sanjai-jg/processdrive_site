@@ -43,8 +43,7 @@ export default function Hero() {
         <div aria-live="polite">
           <AnimatePresence mode="wait">
             <motion.div key={s.id} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.5 }}>
-              <span className="eyebrow">{String(i + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span>
-              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-extrabold leading-[1.05] sm:text-5xl lg:text-6xl">
                 {s.title.split(' ').map((w, k) => (
                   <motion.span key={k} className="mr-[.25em] inline-block" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * k, duration: 0.5 }}>{w}</motion.span>
                 ))}

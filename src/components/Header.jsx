@@ -32,14 +32,22 @@ function NavItemContent({ item, logoClass = 'h-9' }) {
   return <><NavIcon to={item.to} className="h-8 w-8" />{item.label}</>
 }
 
+// Opens on hover or keyboard focus (pure CSS). Picking an item, or pressing Escape, "shuts" it: the open styles are
+// dropped and focus is released, so it closes even though the pointer is still over it. It opens normally again once
+// the pointer leaves and comes back (or on the next tap or keypress on the heading).
 function Dropdown({ label, items, width = 'w-72' }) {
+  const [shut, setShut] = useState(false)
+  const close = () => { setShut(true); if (document.activeElement instanceof HTMLElement) document.activeElement.blur() }
+  const openStyles = 'group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100'
   return (
-    <div className="group relative">
-      <button className="flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-pd-ink transition hover:text-pd-blue" aria-haspopup="true">{label}<ChevronDown className="h-4 w-4 transition group-hover:rotate-180" /></button>
-      <div className={`invisible absolute left-0 top-full z-50 ${width} translate-y-2 pt-2 opacity-0 transition duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100`}>
+    <div className="group relative" onPointerLeave={() => setShut(false)} onKeyDown={(e) => e.key === 'Escape' && close()}>
+      <button onPointerDown={() => setShut(false)} className="flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-pd-ink transition hover:text-pd-blue" aria-haspopup="true" aria-expanded={!shut}>
+        {label}<ChevronDown className={`h-4 w-4 transition ${shut ? '' : 'group-hover:rotate-180'}`} />
+      </button>
+      <div className={`invisible absolute left-0 top-full z-50 ${width} translate-y-2 pt-2 opacity-0 transition duration-200 ${shut ? 'pointer-events-none' : openStyles}`}>
         <div className="card p-2">
           {items.map((it) => (
-            <Link key={it.to} to={it.to} className="group/item flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-pd-ink hover:bg-pd-mist hover:text-pd-blue">
+            <Link key={it.to} to={it.to} onClick={close} className="group/item flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-pd-ink hover:bg-pd-mist hover:text-pd-blue">
               <NavItemContent item={it} />
             </Link>
           ))}

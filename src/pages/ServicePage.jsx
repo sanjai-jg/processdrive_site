@@ -1,10 +1,12 @@
 import { Navigate, useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Check, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Check, ShieldCheck } from 'lucide-react'
 import Seo from '../components/Seo'
 import Reveal from '../components/Reveal'
-import { SectionHeading, PageHero, CtaBand } from '../components/ui'
-import { getService, services } from '../data/services'
+import NetworkBg from '../components/NetworkBg'
+import ScrollExpand from '../components/ui/scroll-expand'
+import { SectionHeading, CtaBand } from '../components/ui'
+import { getService, services, serviceHeroImages } from '../data/services'
 
 export default function ServicePage() {
   const { slug } = useParams()
@@ -14,7 +16,21 @@ export default function ServicePage() {
   return (
     <>
       <Seo path={`/services/${s.slug}`} title={s.seoTitle} description={s.seoDesc} />
-      <PageHero eyebrow="Services" title={s.hero.title} sub={s.hero.sub} tagline={s.hero.tagline} cta={s.hero.cta} />
+      {/* hero: a framed photo that opens up to full screen as you scroll; title, intro and button appear once it is full */}
+      <section className="relative -mt-[88px] bg-pd-navy text-white" aria-label={s.hero.title}>
+        <h1 className="sr-only">{s.hero.title}</h1>
+        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(60%_50%_at_85%_10%,rgba(0,120,232,.35),transparent),radial-gradient(40%_40%_at_5%_90%,rgba(1,169,92,.25),transparent)]" />
+        <NetworkBg className="opacity-50" />
+        <ScrollExpand useWindowScroll src={serviceHeroImages[s.slug]} alt="" title={s.hero.title} scrollHint="Scroll to explore" mediaZoom={1.25} scrollDistance={0.9} holdDistance={0.15} startWidth={46} startHeight={56} overlayScrim={0.9} largeScreenHeight={0.65}>
+          {/* dark glass panel: keeps the text readable whatever the photo looks like */}
+          <div className="flex max-w-3xl flex-col items-center rounded-3xl bg-pd-navy/75 px-6 py-6 text-center ring-1 ring-white/15 backdrop-blur-md sm:px-10 sm:py-8">
+            <span className="eyebrow !border-white/25 !bg-white/10 !text-white/90">Services</span>
+            <p className="mt-4 text-base leading-relaxed text-white sm:text-lg">{s.hero.sub}</p>
+            {s.hero.tagline && <p className="mt-3 font-display text-sm font-semibold tracking-wide text-emerald-400">{s.hero.tagline}</p>}
+            {s.hero.cta && <Link to="/contact-us" className="btn btn-primary mt-6">{s.hero.cta}<ArrowRight className="h-4 w-4" /></Link>}
+          </div>
+        </ScrollExpand>
+      </section>
 
       {s.intro.length > 0 && (
         <section className="section bg-white">

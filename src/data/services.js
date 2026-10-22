@@ -211,3 +211,14 @@ export const services = [
 ]
 
 export const getService = (slug) => services.find((s) => s.slug === slug)
+
+// Hero photo for each service page (the frame that expands as you scroll). Stand-ins from Unsplash:
+// replace any of these with your own, e.g. import saas from '../assets/services/saas.jpg' and use it as the value.
+const photo = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1800&q=80`
+export const serviceHeroImages = {
+  'full-stack-saas-development': photo('photo-1461749280684-dccba630e2f6'),
+  'odoo-implementation-services': photo('photo-1551288049-bebda4e38f71'),
+  'mobile-app-development': photo('photo-1512941937669-90a1b58e7e9c'),
+  'website-development': photo('photo-1547658719-da2b51169166'),
+  'digital-marketing-services': photo('photo-1460925895917-afdab827c52f'),
+}
