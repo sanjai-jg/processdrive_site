@@ -1,0 +1,294 @@
+import { lazy, Suspense, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { ArrowRight, BadgeCheck, Cpu, UserCheck, Layers, Building2, User, Bot, Smartphone, ClipboardCheck, Sparkles } from 'lucide-react'
+import Seo from '../components/Seo'
+import Hero from '../components/Hero'
+import Reveal from '../components/Reveal'
+import CountUp from '../components/CountUp'
+import ReadinessQuiz from '../components/ReadinessQuiz'
+import NetworkBg from '../components/NetworkBg'
+import ProductCard from '../components/ProductCard'
+const RobotMascot = lazy(() => import('../components/ui/robot-mascot'))
+import { SectionHeading, CtaBand } from '../components/ui'
+import { positioning, why, talksBack, dayOne, switching, howWeBuild, products, careit, trusted, blogHeading, posts } from '../data/site'
+
+function Positioning() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 80%', 'center 40%'] })
+  const glow = useTransform(scrollYProgress, [0, 1], [0.2, 1])
+  return (
+    <section ref={ref} className="section bg-white">
+      <div className="container-pd grid items-center gap-14 lg:grid-cols-2">
+        <Reveal>
+          <span className="eyebrow">Our position</span>
+          <h2 className="mt-4 text-3xl font-bold leading-tight sm:text-5xl">{positioning.title.split('. ')[0]}. <span className="gradient-text">{positioning.title.split('. ')[1]}</span></h2>
+          <p className="mt-6 text-lg leading-relaxed text-pd-grey">{positioning.body}</p>
+        </Reveal>
+        <div className="relative mx-auto w-full max-w-md">
+          {/* the robot stands on the AI foundation card and follows the cursor across the whole section */}
+          <Suspense fallback={<div className="h-[320px]" />}>
+            <RobotMascot eventSource={ref} className="relative z-10 -mb-11 h-[320px] w-full" />
+          </Suspense>
+          <motion.div style={{ opacity: glow }} className="relative rounded-2xl bg-pd-navy p-8 pt-10 text-center text-white shadow-glow" aria-hidden="true">
+            <NetworkBg className="rounded-2xl opacity-60" />
+            <p className="relative font-display text-xl font-bold">AI foundation</p>
+            <p className="relative mt-1 text-sm text-white/70">Data pipelines · models · interface · automation</p>
+            <div className="relative mt-5 grid grid-cols-3 gap-2 text-[11px] font-semibold uppercase tracking-wider">{['Data', 'Models', 'Product'].map((t) => <span key={t} className="rounded-lg border border-white/15 bg-white/10 py-2">{t}</span>)}</div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const pillarIcons = [BadgeCheck, Cpu, UserCheck]
+
+function Why() {
+  return (
+    <section className="section bg-pd-mist">
+      <div className="container-pd">
+        <SectionHeading eyebrow="Why ProcessDrive" title={why.title} body={why.body} />
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
+          {why.pillars.map((p, i) => {
+            const I = pillarIcons[i]
+            return (
+              <Reveal key={p.title} delay={i * 0.1}>
+                <div className="card group h-full p-8 transition duration-300 hover:-translate-y-1.5 hover:border-pd-blue/40">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-pd-gradient text-white shadow-glow"><I className="h-6 w-6" /></span>
+                  <h3 className="mt-6 text-xl font-semibold">{p.title}</h3>
+                  <p className="mt-3 leading-relaxed text-pd-grey">{p.text}</p>
+                </div>
+              </Reveal>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function TalksBack() {
+  const bubbles = [
+    { from: 'human', text: 'Our approvals take three days. Can that be fixed?', icon: User },
+    { from: 'ai', text: 'Mapped your workflow. 70% of steps can be automated with review checkpoints.', icon: Bot },
+    { from: 'human', text: 'Keep finance sign-off manual.', icon: User },
+    { from: 'ai', text: 'Done. Prototype ready for your team to test.', icon: Bot },
+  ]
+  return (
+    <section className="relative overflow-hidden bg-pd-navy py-24 text-white sm:py-32">
+      <div className="absolute inset-0 bg-[radial-gradient(50%_80%_at_20%_20%,rgba(0,120,232,.3),transparent)]" />
+      <div className="container-pd relative grid items-center gap-14 lg:grid-cols-2">
+        <SectionHeading dark eyebrow="Human insight · machine capability" title={talksBack.title} body={talksBack.body} />
+        <div className="space-y-4" aria-hidden="true">
+          {bubbles.map((b, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20, x: b.from === 'human' ? -20 : 20 }} whileInView={{ opacity: 1, y: 0, x: 0 }} viewport={{ once: true, margin: '-40px' }} transition={{ delay: i * 0.25, duration: 0.5 }} className={`flex items-start gap-3 ${b.from === 'ai' ? 'flex-row-reverse' : ''}`}>
+              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${b.from === 'ai' ? 'bg-pd-gradient' : 'bg-white/15'}`}><b.icon className="h-4 w-4" /></span>
+              <p className={`max-w-sm rounded-2xl px-5 py-3 text-sm leading-relaxed ${b.from === 'ai' ? 'rounded-tr-sm bg-pd-blue/30 text-white' : 'rounded-tl-sm bg-white/10 text-white/85'}`}>{b.text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Stats() {
+  return (
+    <section className="section bg-white">
+      <div className="container-pd">
+        <SectionHeading center eyebrow="Experience" title={dayOne.title} body={dayOne.body} />
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {dayOne.stats.map((s, i) => (
+            <Reveal key={s.label} delay={i * 0.08}>
+              <div className="card h-full p-8 text-center">
+                <p className="font-display text-5xl font-extrabold gradient-text"><CountUp to={s.value} suffix={s.suffix} /></p>
+                <p className="mt-3 font-semibold">{s.label}</p>
+                <p className="mt-1 text-sm text-pd-grey">{s.sub}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Switching() {
+  return (
+    <section className="section bg-pd-mist">
+      <div className="container-pd">
+        <SectionHeading eyebrow="The difference" title={switching.title} />
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {switching.items.map((s, i) => (
+            <Reveal key={s.title} delay={(i % 3) * 0.08}>
+              <div className="card group relative h-full overflow-hidden p-7 transition duration-300 hover:-translate-y-1.5">
+                <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-pd-gradient transition duration-500 group-hover:scale-x-100" />
+                <span className="font-display text-sm font-bold text-pd-green">{String(i + 1).padStart(2, '0')}</span>
+                <h3 className="mt-2 text-lg font-semibold">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-pd-grey">{s.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// Vertical S-curve: six nodes (y = 75, 225 ... 825 of 900), x alternating 190 / 410 of 600
+const CURVE = (() => {
+  const pts = [0, 1, 2, 3, 4, 5].map((i) => [i % 2 === 0 ? 190 : 410, (i + 0.5) * 150])
+  let d = `M${pts[0][0]} 0 L${pts[0][0]} ${pts[0][1]}`
+  for (let i = 1; i < pts.length; i++) d += ` C${pts[i - 1][0]} ${pts[i - 1][1] + 85} ${pts[i][0]} ${pts[i][1] - 85} ${pts[i][0]} ${pts[i][1]}`
+  return d + ` L${pts[5][0]} 900`
+})()
+
+function HowWeBuild() {
+  const ref = useRef(null)
+  const curveRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 70%', 'end 60%'] })
+  // the desktop line tracks the curve itself so it is fully drawn once the last step reaches mid-screen
+  const { scrollYProgress: curveProgress } = useScroll({ target: curveRef, offset: ['start 65%', 'end 55%'] })
+  const pathLength = useTransform(curveProgress, [0, 1], [0, 1])
+  const h = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+  return (
+    <section ref={ref} className="section bg-white">
+      <div className="container-pd">
+        <SectionHeading eyebrow="Process" title={howWeBuild.title} />
+        {/* desktop: vertical winding S-curve, nodes alternate left and right; the line draws as you scroll */}
+        <div ref={curveRef} className="relative mx-auto mt-12 hidden h-[900px] max-w-5xl lg:block">
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 600 900" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="howGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#0078E8" /><stop offset="1" stopColor="#01A95C" /></linearGradient></defs>
+            <path d={CURVE} fill="none" stroke="#E3E9F2" strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+            <motion.path d={CURVE} fill="none" stroke="url(#howGrad)" strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" style={{ pathLength }} />
+          </svg>
+          {howWeBuild.steps.map((s, i) => {
+            const left = i % 2 === 0
+            const x = left ? 190 / 6 : 410 / 6
+            return (
+              <div key={s.title}>
+                <span className="absolute z-10 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-pd-blue bg-white font-display text-lg font-bold text-pd-blue shadow-card" style={{ left: `${x}%`, top: (i + 0.5) * 150 }}>{i + 1}</span>
+                <Reveal delay={0.05} className={`absolute w-[30%] -translate-y-1/2 ${left ? 'text-right' : 'text-left'}`} style={{ top: (i + 0.5) * 150, ...(left ? { right: `calc(${100 - x}% + 44px)` } : { left: `calc(${x}% + 44px)` }) }}>
+                  <h3 className="text-lg font-semibold">{s.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-pd-grey">{s.text}</p>
+                </Reveal>
+              </div>
+            )
+          })}
+        </div>
+        <p className="mt-2 hidden items-center gap-2 text-sm font-medium text-pd-green lg:flex"><Layers className="h-4 w-4" />Deploy &amp; Evolve feeds back into Discover: the loop never closes.</p>
+        {/* mobile: vertical */}
+        <div className="relative mt-12 pl-10 lg:hidden">
+          <div className="absolute bottom-0 left-[18px] top-0 w-0.5 bg-pd-line"><motion.div style={{ height: h }} className="w-full bg-pd-gradient" /></div>
+          {howWeBuild.steps.map((s, i) => (
+            <Reveal key={s.title} className="relative mb-8 last:mb-0">
+              <span className="absolute -left-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-pd-blue bg-white text-sm font-bold text-pd-blue">{i + 1}</span>
+              <h3 className="font-semibold">{s.title}</h3>
+              <p className="mt-1 text-sm text-pd-grey">{s.text}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const productIcons = { rentasst: Smartphone, aim2c: ClipboardCheck, ragifi: Sparkles }
+
+function Products() {
+  return (
+    <section className="section overflow-hidden bg-pd-mist">
+      <div className="container-pd">
+        <SectionHeading eyebrow="Products" title="Our AI-Native Products" />
+        <div className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2 xl:gap-y-10">
+          {products.map((p, i) => (
+            <Reveal key={p.slug} delay={(i % 2) * 0.1} className="pt-12 xl:pt-0">
+              <ProductCard tone={i} name={p.name} tag={p.status === 'soon' ? null : p.tag} text={p.blurb} icon={productIcons[p.slug] || Cpu} logo={p.logo} soon={p.status === 'soon'} to={`/products/${p.slug}`} cta={`Explore ${p.name}`} />
+            </Reveal>
+          ))}
+          <Reveal delay={0.1} className="pt-12 xl:pt-0">
+            <ProductCard tone={3} name={careit.name} tag="ProcessDrive-supported platform" text={careit.text} icon={Building2} logo={careit.logo} />
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Readiness() {
+  return (
+    <section className="section bg-white" id="ai-readiness">
+      <div className="container-pd grid items-center gap-12 lg:grid-cols-[.9fr_1.1fr]">
+        <SectionHeading eyebrow="Try it" title="Where could AI move your business first?" body="Four quick questions give you a suggested starting point, and a specialist can review it with you. No sign-up needed to see the result." />
+        <Reveal><ReadinessQuiz /></Reveal>
+      </div>
+    </section>
+  )
+}
+
+function Trusted() {
+  const list = [...trusted.clients, ...trusted.clients, ...trusted.clients, ...trusted.clients]
+  return (
+    <section className="section overflow-hidden bg-pd-mist">
+      <div className="container-pd">
+        <SectionHeading center eyebrow="Clients" title={trusted.title} body={trusted.line} />
+      </div>
+      <div className="mt-12 overflow-hidden" aria-label="Our clients">
+        <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
+          {[...list, ...list].map((c, i) => (
+            <span key={i} className="card flex h-24 w-64 shrink-0 items-center justify-center font-display text-xl font-bold text-pd-grey">{c}</span>
+          ))}
+        </div>
+      </div>
+      <p className="container-pd mt-8 text-center text-sm text-pd-grey">ProcessDrive × Odoo customers: logos to be added here from the current site.</p>
+    </section>
+  )
+}
+
+function Blog() {
+  return (
+    <section className="section bg-white">
+      <div className="container-pd">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <SectionHeading eyebrow="Blog" title={blogHeading} />
+          <Link to="/blogs" className="btn btn-outline">All articles<ArrowRight className="h-4 w-4" /></Link>
+        </div>
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {posts.slice(0, 3).map((p, i) => (
+            <Reveal key={p.slug} delay={i * 0.1}>
+              <Link to={`/blogs/posts/${p.slug}`} className="card group block h-full overflow-hidden transition duration-300 hover:-translate-y-1.5">
+                <div className="relative h-40 bg-pd-navy"><NetworkBg still className="opacity-70" /></div>
+                <div className="p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-pd-green">{p.date}</p>
+                  <h3 className="mt-2 text-lg font-semibold group-hover:text-pd-blue">{p.refreshed}</h3>
+                  <p className="mt-2 line-clamp-3 text-sm text-pd-grey">{p.excerpt}</p>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default function Home() {
+  return (
+    <>
+      <Seo path="/" title="ProcessDrive | AI-Native Software, Built by an AI-Certified Team" description="ProcessDrive is a 100% AI-certified team building AI-native software: workflow automation, AI-powered Odoo, intelligent mobile apps and websites. ISMS certified." />
+      <Hero />
+      <Positioning />
+      <Why />
+      <TalksBack />
+      <Stats />
+      <Switching />
+      <HowWeBuild />
+      <Products />
+      <Readiness />
+      <Trusted />
+      <Blog />
+      <CtaBand />
+    </>
+  )
+}
