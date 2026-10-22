@@ -8,6 +8,7 @@ import CountUp from '../components/CountUp'
 import { SectionHeading, PageHero, CtaBand } from '../components/ui'
 import { about, lifeGallery } from '../data/site'
 import OrbitCarousel from '../components/ui/orbit-carousel'
+import TimelineSnake from '../components/ui/timeline-snake'
 import HalftoneWordmark from '../components/ui/halftone-wordmark-footer'
 import HalftoneLogo from '../components/ui/halftone-logo'
 import PerspectiveTunnelHero from '../components/ui/perspective-tunnel-hero'
@@ -20,7 +21,8 @@ function Timeline() {
     <section className="section bg-white">
       <div className="container-pd">
         <SectionHeading center eyebrow="Pathway of progress" title="From humble beginnings to a company built entirely around AI" body="Here’s how we got here." />
-        <div ref={ref} className="relative mx-auto mt-16 max-w-4xl">
+        <TimelineSnake items={about.timeline} className="mx-auto mt-16 hidden max-w-6xl lg:block" />
+        <div ref={ref} className="relative mx-auto mt-16 max-w-4xl lg:hidden">
           <div className="absolute bottom-0 left-4 top-0 w-0.5 bg-pd-line md:left-1/2 md:-translate-x-1/2"><motion.div style={{ height: h }} className="w-full bg-pd-gradient" /></div>
           {about.timeline.map((t, i) => {
             const last = t.year === '2026'
@@ -166,13 +168,33 @@ function Way() {
 function AboutHero() {
   return (
     <section className="bg-white">
-      <div className="container-pd pt-20 sm:pt-28">
-        <Reveal className="max-w-3xl">
+      <div className="container-pd grid items-center gap-10 pb-12 pt-6 sm:pb-14 sm:pt-8 lg:grid-cols-[1.05fr_.95fr] lg:gap-14">
+        <Reveal>
           <span className="eyebrow">About us</span>
           <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] text-pd-navy sm:text-5xl lg:text-6xl">{about.intro.title}</h1>
           <p className="mt-6 text-lg leading-relaxed text-pd-grey">{about.intro.body}</p>
         </Reveal>
+        <Reveal delay={0.15}>
+          <HalftoneLogo background="#FFFFFF" scale={0.92} height="clamp(300px, 36vw, 440px)" className="touch-pan-y">
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.95 }} animate={{ opacity: 1, y: [0, -6, 0], scale: 1 }}
+              transition={{ opacity: { duration: 0.6, delay: 0.5 }, scale: { duration: 0.6, delay: 0.5 }, y: { duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 } }}
+              className="pointer-events-none absolute bottom-9 right-0 z-10 max-w-[9.5rem] rounded-xl bg-pd-navy px-3.5 py-2.5 shadow-glow ring-1 ring-white/10 sm:right-1 sm:max-w-[11rem]"
+            >
+              <span className="mb-1.5 block h-0.5 w-6 rounded-full bg-pd-gradient" />
+              <p className="font-display text-sm font-bold leading-tight text-white sm:text-[0.95rem]">Every dot is a process we drive.</p>
+            </motion.div>
+            <p className="pointer-events-none absolute inset-x-0 bottom-2 z-10 text-center text-xs text-pd-grey/70">Move your cursor through the logo. Click to send a ripple.</p>
+          </HalftoneLogo>
+        </Reveal>
       </div>
+    </section>
+  )
+}
+
+function Wordmark() {
+  return (
+    <section className="bg-white">
       <HalftoneWordmark
         as="div" hideTop backToTop={false} wordmark="ProcessDrive" className="mt-6"
         palette={{ background: '#FFFFFF', ink: '#0A1020', warm: '#0078E8' }} splitAt={7} warmAfter="#01A95C"
@@ -180,20 +202,6 @@ function AboutHero() {
         dotGap={5} radius={90} crop={-0.12} fill={0.94} grain={0.3} height="300px"
       />
     </section>
-  )
-}
-
-function LogoPlay() {
-  return (
-    <HalftoneLogo height="560px" className="touch-pan-y">
-      <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-6xl flex-col justify-between px-5 py-10 text-white sm:px-8">
-        <div>
-          <p className="eyebrow !text-pd-green">The mark</p>
-          <h2 className="mt-3 max-w-md font-display text-3xl font-bold leading-tight sm:text-4xl">Every dot is a process we drive.</h2>
-        </div>
-        <p className="text-sm text-white/50">Move your cursor through the logo. Click to send a ripple.</p>
-      </div>
-    </HalftoneLogo>
   )
 }
 
@@ -230,9 +238,9 @@ export default function About() {
       {/* Leadership hidden for now. To show it again, uncomment the next line. */}
       {/* <Leadership /> */}
       <Ceo />
-      <LogoPlay />
       <Way />
       <Life />
+      <Wordmark />
       <Certs />
       <CtaBand />
     </>
