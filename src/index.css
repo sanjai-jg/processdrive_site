@@ -30,6 +30,8 @@
   .hero-main .mt-8 { margin-top: 1.25rem; }
   .hero-visual { zoom: .8; }
 }
+@keyframes beam-dash { to { stroke-dashoffset: var(--beam-travel); } }
 @media (prefers-reduced-motion: reduce) {
+  .beam-pulse { display: none; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }

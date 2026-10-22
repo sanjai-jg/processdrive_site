@@ -1,12 +1,13 @@
-import { lazy, Suspense, useRef } from 'react'
+import { createRef, lazy, Suspense, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowRight, BadgeCheck, Cpu, UserCheck, Layers, Building2, User, Bot, Smartphone, ClipboardCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Cpu, UserCheck, Layers, Building2, User, Bot, Smartphone, ClipboardCheck, Sparkles, Zap, RefreshCw, Eye, BarChart3, Users } from 'lucide-react'
+import AnimatedBeam from '../components/ui/animated-beam'
+import pdLogo from '../assets/PD_Logo.png'
 import Seo from '../components/Seo'
 import Hero from '../components/Hero'
 import Reveal from '../components/Reveal'
 import CountUp from '../components/CountUp'
-import ReadinessQuiz from '../components/ReadinessQuiz'
 import NetworkBg from '../components/NetworkBg'
 import ProductCard from '../components/ProductCard'
 const RobotMascot = lazy(() => import('../components/ui/robot-mascot'))
@@ -134,21 +135,58 @@ function Stats() {
   )
 }
 
+const switchIcons = [BadgeCheck, Cpu, Zap, RefreshCw, Eye, UserCheck, BarChart3, Users]
+
+// Eight reasons orbit one hub: four on each side, with a pulse of light running from each into the hub.
 function Switching() {
+  const container = useRef(null)
+  const hub = useRef(null)
+  const nodes = useMemo(() => switching.items.map(() => createRef()), [])
+  const left = switching.items.slice(0, 4)
+  const right = switching.items.slice(4)
+
+  const item = (s, i, side) => {
+    const I = switchIcons[i]
+    const isLeft = side === 'left'
+    return (
+      <Reveal key={s.title} delay={(isLeft ? i : i - 4) * 0.08} y={18}>
+        <div className={`group flex items-center gap-4 ${isLeft ? 'lg:flex-row-reverse lg:text-right' : ''}`}>
+          <span ref={nodes[i]} className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-pd-line bg-white text-pd-blue shadow-card ring-4 ring-pd-mist transition duration-300 group-hover:scale-110 group-hover:border-pd-blue/50 group-hover:text-white group-hover:shadow-glow">
+            <span className="absolute inset-0 rounded-full bg-pd-gradient opacity-0 transition duration-300 group-hover:opacity-100" />
+            <I className="relative h-6 w-6" />
+          </span>
+          <div className="min-w-0">
+            <p className="font-display text-[11px] font-bold tracking-[0.2em] text-pd-green">{String(i + 1).padStart(2, '0')}</p>
+            <h3 className="text-base font-semibold leading-snug">{s.title}</h3>
+            <p className="mt-1 text-sm leading-relaxed text-pd-grey">{s.text}</p>
+          </div>
+        </div>
+      </Reveal>
+    )
+  }
+
   return (
     <section className="section bg-pd-mist">
       <div className="container-pd">
-        <SectionHeading eyebrow="The difference" title={switching.title} />
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <SectionHeading wide eyebrow="The difference" title={switching.title} />
+        <div ref={container} className="relative mt-16 grid gap-10 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-x-24">
+          <div className="relative z-10 flex flex-col gap-8 lg:gap-9">{left.map((s, i) => item(s, i, 'left'))}</div>
+
+          <div className="relative z-10 order-first mx-auto flex flex-col items-center lg:order-none">
+            <div ref={hub} className="relative flex h-28 w-28 items-center justify-center rounded-full bg-white shadow-glow ring-8 ring-pd-mist">
+              <motion.span aria-hidden="true" className="absolute inset-0 rounded-full border-2 border-pd-blue/40"
+                animate={{ scale: [1, 1.5], opacity: [0.6, 0] }} transition={{ duration: 2.6, repeat: Infinity, ease: 'easeOut' }} />
+              <img src={pdLogo} alt="ProcessDrive" className="h-16 w-16" />
+            </div>
+            <p className="mt-4 font-display text-sm font-semibold">AI-only partner</p>
+          </div>
+
+          <div className="relative z-10 flex flex-col gap-8 lg:gap-9">{right.map((s, i) => item(s, i + 4, 'right'))}</div>
+
           {switching.items.map((s, i) => (
-            <Reveal key={s.title} delay={(i % 3) * 0.08}>
-              <div className="card group relative h-full overflow-hidden p-7 transition duration-300 hover:-translate-y-1.5">
-                <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-pd-gradient transition duration-500 group-hover:scale-x-100" />
-                <span className="font-display text-sm font-bold text-pd-green">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="mt-2 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-pd-grey">{s.text}</p>
-              </div>
-            </Reveal>
+            <AnimatedBeam key={s.title} className="hidden lg:block" containerRef={container} fromRef={nodes[i]} toRef={hub}
+              curvature={i < 4 ? (i - 1.5) * -14 : (i - 5.5) * 14} duration={2.8} delay={(i % 4) * 0.45}
+              beamColor={i % 2 ? '#01A95C' : '#0078E8'} />
           ))}
         </div>
       </div>
@@ -236,17 +274,6 @@ function Products() {
   )
 }
 
-function Readiness() {
-  return (
-    <section className="section bg-white" id="ai-readiness">
-      <div className="container-pd grid items-center gap-12 lg:grid-cols-[.9fr_1.1fr]">
-        <SectionHeading eyebrow="Try it" title="Where could AI move your business first?" body="Four quick questions give you a suggested starting point, and a specialist can review it with you. No sign-up needed to see the result." />
-        <Reveal><ReadinessQuiz /></Reveal>
-      </div>
-    </section>
-  )
-}
-
 function Trusted() {
   const list = [...trusted.clients, ...trusted.clients, ...trusted.clients, ...trusted.clients]
   return (
@@ -305,7 +332,6 @@ export default function Home() {
       <Switching />
       <HowWeBuild />
       <Products />
-      <Readiness />
       <Trusted />
       <Blog />
       <CtaBand />

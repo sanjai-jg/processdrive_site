@@ -68,7 +68,6 @@ export const switching = {
     { title: 'Adaptive Systems', text: 'Our solutions learn from usage patterns and improve over time: software that gets smarter, not stale.' },
     { title: 'Transparent, Explainable AI', text: 'We build systems your team can trust and understand, not black boxes you have to take on faith.' },
     { title: 'Human-in-the-Loop by Default', text: 'AI accelerates the work; certified specialists own the judgment calls.' },
-    { title: 'Future-Proof Investment', text: 'Built on AI foundations that scale with the next generation of models, not tied to a single tool or vendor.' },
     { title: 'Data-Driven Decisions', text: 'Every recommendation, workflow, and automation is grounded in your real operational data.' },
     { title: 'True Partnership', text: 'An AI-certified team embedded in your goals: not a vendor relationship, a technology partnership.' },
   ],
