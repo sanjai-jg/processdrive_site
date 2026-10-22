@@ -15,7 +15,7 @@ const dist = join(root, 'dist')
 const SITE = process.env.VITE_SITE_URL || 'https://www.processdrive.com'
 
 const routes = [
-  '/', '/about-us', '/contact-us', '/careers', '/blogs', '/certifications', '/privacy-policy', '/terms-and-condition',
+  '/', '/about-us', '/contact-us', '/careers', '/blogs', '/privacy-policy', '/terms-and-condition',
   ...services.map((s) => `/services/${s.slug}`),
   ...products.map((p) => `/products/${p.slug}`),
   ...posts.map((p) => `/blogs/posts/${p.slug}`),

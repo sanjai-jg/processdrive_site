@@ -51,9 +51,7 @@ export default function Hero() {
               </h1>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">{s.sub}</p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link to={s.to} className="btn btn-primary">{s.cta}<ArrowRight className="h-4 w-4" /></Link>
-                <Link to="/certifications" className="btn border border-white/25 text-white hover:bg-white/10">See our certifications</Link>
-              </div>
+                <Link to={s.to} className="btn btn-primary">{s.cta}<ArrowRight className="h-4 w-4" /></Link>              </div>
             </motion.div>
           </AnimatePresence>
         </div>

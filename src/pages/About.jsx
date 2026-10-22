@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import { Eye, Rocket, Quote, ShieldCheck, BadgeCheck, Handshake, ArrowRight, Check, Compass, Workflow, LayoutDashboard, BarChart3, BookOpen, Network, Flag, Heart } from 'lucide-react'
+import { Eye, Rocket, Quote, BadgeCheck, ArrowRight, Compass, Workflow, LayoutDashboard, BarChart3, BookOpen, Network, Flag, Heart } from 'lucide-react'
 import Seo from '../components/Seo'
 import Reveal from '../components/Reveal'
 import CountUp from '../components/CountUp'
 import NetworkBg from '../components/NetworkBg'
 import pdLogo from '../assets/PD_Logo.png'
-import ceoPhoto from '../assets/team/saravanan-sivalingam.png'
-import { SectionHeading, PageHero, CtaBand } from '../components/ui'
+import ceoPhoto from '../assets/ceo/saran-sir.jpg'
+import isoBadge from '../assets/Certifications/ISO-Badge-CFdx17Qo.png'
+import claudeBadge from '../assets/Certifications/Partner Badge - Certified SVG (Chip).jpg'
+import dnbBadge from '../assets/Certifications/DUN & Breadstreet.png'
+import { SectionHeading } from '../components/ui'
 import { about, lifeGallery, wayImages } from '../data/site'
 import OrbitCarousel from '../components/ui/orbit-carousel'
 import TimelineSnake from '../components/ui/timeline-snake'
@@ -423,21 +426,59 @@ function Wordmark() {
   )
 }
 
+// Photos for "Life Between Deployments": drop any images into src/assets/Office/ (jpg, jpeg, png, webp, avif, gif) and they appear here,
+// in filename order. A caption is taken from the file name ("team-lunch.jpg" -> "Team Lunch"); camera-style names (IMG_2043, DSC...) get no caption.
+// Until the folder has images, the stand-in photos from lifeGallery are used.
+const officeFiles = import.meta.glob('../assets/Office/*.{jpg,jpeg,png,webp,avif,gif,JPG,JPEG,PNG,WEBP,AVIF,GIF}', { eager: true, import: 'default' })
+const officeCaption = (path) => {
+  const name = path.split('/').pop().replace(/\.[^.]+$/, '').replace(/^\d+[\s._-]+/, '')
+  if (/^(img|dsc|dscn|image|photo|pxl|screenshot|whatsapp|mvimg|pic)[\s._-]*\d*/i.test(name) || /^[\d\s._-]*$/.test(name)) return ''
+  return name.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+const officeImages = Object.entries(officeFiles)
+  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+  .map(([path, src]) => ({ src, title: officeCaption(path) }))
+
 function Life() {
-  return <PerspectiveTunnelHero id="life" images={lifeGallery} eyebrow="Life at ProcessDrive" title={about.life.title} subtitle="From celebrations to milestones, a glimpse into life between one deployment and the next." hint="Scroll to walk through our moments" />
+  return <PerspectiveTunnelHero id="life" images={officeImages.length ? officeImages : lifeGallery} eyebrow="Life at ProcessDrive" title={about.life.title} subtitle="From celebrations to milestones, a glimpse into life between one deployment and the next." hint="Scroll to walk through our moments" />
 }
 
+const CREDENTIALS = [
+  { badge: isoBadge, alt: 'ISO 27001:2022 certified, Information Security Management Systems', status: 'Certified', title: 'ISMS certified', text: 'ISO/IEC 27001:2022 information security management, documented, audited and repeatable.' },
+  { badge: claudeBadge, alt: 'Claude Certified Services Partner', status: 'Certified partner', title: 'Claude certified partner', text: 'A Claude Certified Services Partner, backed by active AI certifications across leading platforms.' },
+  { badge: dnbBadge, alt: 'Dun & Bradstreet D-U-N-S registered', status: 'Registered', title: 'D-U-N-S registered', text: 'Dun & Bradstreet registered, for business verification and partnerships you can trust.' },
+]
+
+// one trust panel: three columns split by hairlines, each badge on a soft plate that floats gently, then tilts, grows and catches a sheen on hover
 function Certs() {
   return (
-    <section className="section bg-white">
+    <section className="section overflow-hidden bg-white">
       <div className="container-pd">
         <SectionHeading center eyebrow="Credentials" title={about.certs.title} body={about.certs.body} />
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {[[ShieldCheck, 'ISMS certified', 'ISO/IEC 27001 information security'], [BadgeCheck, 'AI-certified team', 'Active certifications across leading AI platforms'], [Handshake, 'Verified partner', 'Business verification and partnerships']].map(([I, t, d], i) => (
-            <Reveal key={t} delay={i * 0.1}><div className="card h-full p-8 transition duration-300 hover:-translate-y-1 hover:border-pd-green/40"><span className="flex h-12 w-12 items-center justify-center rounded-xl bg-pd-green/10"><I className="h-6 w-6 text-pd-green" /></span><h3 className="mt-4 text-lg font-semibold">{t}</h3><p className="mt-2 text-sm text-pd-grey">{d}</p></div></Reveal>
-          ))}
-        </div>
-        <div className="mt-10 text-center"><Link to="/certifications" className="btn btn-outline">View all certifications<ArrowRight className="h-4 w-4" /></Link></div>
+        <Reveal className="mt-14">
+          <div className="relative overflow-hidden rounded-[2rem] border border-pd-line bg-white shadow-card">
+            <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-pd-gradient" />
+            <span aria-hidden="true" className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-pd-blue/10 blur-3xl" />
+            <span aria-hidden="true" className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-pd-green/10 blur-3xl" />
+            <div className="relative grid divide-y divide-pd-line md:grid-cols-3 md:divide-x md:divide-y-0">
+              {CREDENTIALS.map((c, i) => (
+                <div key={c.title} className="group flex flex-col items-center px-8 py-10 text-center sm:px-10 sm:py-12">
+                  <motion.div animate={{ y: [0, -7, 0] }} transition={{ duration: 5 + i * 0.6, repeat: Infinity, ease: 'easeInOut', delay: i * 0.5 }}>
+                    <div className="relative flex h-40 w-40 items-center justify-center overflow-hidden rounded-[2rem] bg-white shadow-card ring-1 ring-pd-line transition duration-500 group-hover:-rotate-2 group-hover:scale-105 group-hover:shadow-glow">
+                      <img src={c.badge} alt={c.alt} loading="lazy" className="h-28 w-28 object-contain" />
+                      <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/80 to-transparent opacity-0 transition duration-700 group-hover:left-[130%] group-hover:opacity-100" />
+                    </div>
+                  </motion.div>
+                  <span className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-pd-green/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-pd-green">
+                    <BadgeCheck className="h-3.5 w-3.5" />{c.status}
+                  </span>
+                  <h3 className="mt-3 text-xl font-bold">{c.title}</h3>
+                  <p className="mt-2 max-w-xs text-sm leading-relaxed text-pd-grey">{c.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
@@ -461,7 +502,6 @@ export default function About() {
       {/* Halftone wordmark hidden for now. To show it again, uncomment the next line. */}
       {/* <Wordmark /> */}
       <Certs />
-      <CtaBand />
     </>
   )
 }

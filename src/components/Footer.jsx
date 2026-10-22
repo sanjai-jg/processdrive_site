@@ -24,7 +24,7 @@ export default function Footer() {
         </div>
         <div>
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">Useful Links</h3>
-          <ul className="space-y-2 text-sm">{[['/about-us', 'About us'], ['/careers', 'Careers'], ['/contact-us', 'Contact us'], ['/blogs', 'Blogs'], ['/certifications', 'Certifications']].map(([to, t]) => <li key={to}><Link to={to} className="hover:text-white">{t}</Link></li>)}</ul>
+          <ul className="space-y-2 text-sm">{[['/about-us', 'About us'], ['/careers', 'Careers'], ['/contact-us', 'Contact us'], ['/blogs', 'Blogs']].map(([to, t]) => <li key={to}><Link to={to} className="hover:text-white">{t}</Link></li>)}</ul>
         </div>
         <div>
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">Our Services</h3>

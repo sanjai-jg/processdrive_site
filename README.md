@@ -48,7 +48,7 @@ Add reCAPTCHA or Cloudflare Turnstile later if bots become a problem.
 
 ## Open items before launch
 
-- Replace the ISMS wording once the certificate is issued (`company.trust` in `site.js`) and add badge images to `public/badges/`, then list them in `src/pages/Certifications.jsx`.
+- Replace the ISMS wording once the certificate is issued (`company.trust` in `site.js`). The standalone Certifications page was removed; the About page has a short Credentials section.
 - Proof for "100% AI-certified", and confirm the 40+ talents, 30+ industries and 1000+ figures.
 - Copy still needed: Digital Marketing page, RAGifi description, AIM2C AI description, CEO quote, event photos (About gallery), client and Odoo-customer logos, full text of the 26 blog posts, Privacy and Terms.
 - Confirm the Avalia / Avlia spelling and RentAsst (not RentAss) everywhere.

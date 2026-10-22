@@ -20,18 +20,22 @@ const buildCards = (images) =>
     }
   })
 
-function Photo({ item, className = '' }) {
+// Photos are shown whole: the card takes the picture's own shape (never cropped). Very tall pictures are capped at `maxHeight`
+// and centred (object-contain), so they still show in full.
+function Photo({ item, className = '', maxHeight }) {
   const [failed, setFailed] = useState(false)
   return (
-    <div className={`group relative h-full w-full overflow-hidden rounded-2xl bg-pd-navy shadow-2xl shadow-black/60 ring-1 ring-white/15 transition duration-500 hover:ring-pd-green/80 ${className}`}>
+    <div className={`group relative flex w-full items-center justify-center overflow-hidden rounded-2xl bg-pd-navy shadow-2xl shadow-black/60 ring-1 ring-white/15 transition duration-500 hover:ring-pd-green/80 ${className}`}>
       {failed ? (
-        <div className="h-full w-full bg-[radial-gradient(circle_at_30%_20%,#0078E8,transparent_60%),radial-gradient(circle_at_80%_90%,#01A95C,transparent_55%)] bg-pd-navy" />
+        <div className="aspect-[4/5] w-full bg-[radial-gradient(circle_at_30%_20%,#0078E8,transparent_60%),radial-gradient(circle_at_80%_90%,#01A95C,transparent_55%)] bg-pd-navy" />
       ) : (
-        <img src={item.src} alt={item.title} draggable={false} loading="lazy" onError={() => setFailed(true)} className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+        <img src={item.src} alt={item.title || 'ProcessDrive office'} draggable={false} loading="eager" decoding="async" onError={() => setFailed(true)} style={{ maxHeight }} className="block h-auto w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105" />
       )}
-      <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-black/10 to-transparent p-4">
-        <span className="font-display text-xs font-semibold uppercase tracking-widest text-white/95 sm:text-sm">{item.title}</span>
-      </div>
+      {item.title && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-4 pt-8">
+          <span className="font-display text-xs font-semibold uppercase tracking-widest text-white/95 sm:text-sm">{item.title}</span>
+        </div>
+      )}
     </div>
   )
 }
@@ -49,8 +53,8 @@ function TunnelCard({ card, progress, pointer, total, stage }) {
   const pan = stage.isMobile ? 20 : 45
   const transform = useTransform([z, pointer.x, pointer.y], ([cz, px, py]) => `translate3d(calc(-50% + ${bx - px * pan}px), calc(-50% + ${by - py * pan}px), ${cz}px) rotateZ(${card.rot}deg)`)
   return (
-    <motion.div style={{ width: w, transform, opacity, zIndex: card.index + 1 }} className="pointer-events-auto absolute left-1/2 top-1/2 aspect-[4/5] select-none will-change-transform">
-      <Photo item={card.item} />
+    <motion.div style={{ width: w, transform, opacity, zIndex: card.index + 1 }} className="pointer-events-auto absolute left-1/2 top-1/2 select-none will-change-transform">
+      <Photo item={card.item} maxHeight={Math.round(stage.height * (stage.isMobile ? 0.5 : 0.62))} />
     </motion.div>
   )
 }
@@ -103,8 +107,8 @@ export default function PerspectiveTunnelHero({
           <p className="eyebrow !border-white/20 !bg-white/10 !text-white/80">{eyebrow}</p>
           <h2 className="mt-4 text-3xl font-bold sm:text-5xl">{title}</h2>
           {subtitle && <p className="mt-4 max-w-2xl text-white/70">{subtitle}</p>}
-          <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {images.map((it, i) => <div key={i} className="aspect-[4/5]"><Photo item={it} /></div>)}
+          <div className="mt-10 grid grid-cols-2 items-start gap-4 md:grid-cols-4">
+            {images.map((it) => <Photo key={it.src} item={it} />)}
           </div>
         </div>
       </section>

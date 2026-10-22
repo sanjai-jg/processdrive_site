@@ -285,12 +285,12 @@ export const about = {
 
 export const faq = [
   { q: 'What does ProcessDrive do?', a: 'We build AI-native software: full stack SaaS, AI-powered Odoo implementations, intelligent mobile apps and websites, plus our own products RentAsst and AIM2C.', to: '/services/full-stack-saas-development', k: 'what do you does services build offer company' },
-  { q: 'Are you really 100% AI-certified?', a: 'Every employee holds AI certification; we hire and train that way. See our Certifications page for the credentials.', to: '/certifications', k: 'certified certification certificate ai proof credentials' },
+  { q: 'Are you really 100% AI-certified?', a: 'Every employee holds AI certification; we hire and train that way. See the Credentials section on our About page.', to: '/about-us', k: 'certified certification certificate ai proof credentials' },
   { q: 'Do you implement Odoo?', a: 'Yes. We implement Odoo with an AI layer on top: forecasting, anomaly detection, document processing and natural-language search.', to: '/services/odoo-implementation-services', k: 'odoo erp implementation' },
   { q: 'What is RentAsst?', a: 'An AI-powered rental business management platform for booking, tracking, billing and customer communication, with 1000+ installs across India.', to: '/products/rentasst', k: 'rentasst rental rent equipment tent billing' },
   { q: 'Can you build a mobile app?', a: 'Yes, native or cross-platform with Flutter, with AI features such as on-device intelligence and personalisation built in.', to: '/services/mobile-app-development', k: 'mobile app ios android flutter' },
   { q: 'Can you build or redesign our website?', a: 'Yes. We build on Twill (Laravel CMS) and WordPress, with AI-assisted personalisation and search.', to: '/services/website-development', k: 'website web site cms wordpress twill' },
-  { q: 'Is ProcessDrive security certified?', a: 'ProcessDrive is an ISMS certified company (ISO/IEC 27001). Our quality process is documented, audited and repeatable.', to: '/certifications', k: 'security isms iso 27001 certified quality' },
+  { q: 'Is ProcessDrive security certified?', a: 'ProcessDrive is an ISMS certified company (ISO/IEC 27001). Our quality process is documented, audited and repeatable.', to: '/about-us', k: 'security isms iso 27001 certified quality' },
   { q: 'How do I contact you or apply for a job?', a: 'Use the Contact page for projects or Careers for open roles. You can also call +91 82480 28225 or email info@processdrive.com.', to: '/contact-us', k: 'contact phone email call job career apply hire' },
 ]
 

@@ -9,7 +9,6 @@ import BlogPost from './pages/BlogPost'
 import Careers from './pages/Careers'
 import JobPage from './pages/JobPage'
 import Contact from './pages/Contact'
-import Certifications from './pages/Certifications'
 import Legal from './pages/Legal'
 import NotFound from './pages/NotFound'
 
@@ -27,7 +26,6 @@ export default function App() {
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/job-opening/:slug" element={<JobPage />} />
         <Route path="/contact-us" element={<Contact />} />
-        <Route path="/certifications" element={<Certifications />} />
         <Route path="/privacy-policy" element={<Legal kind="privacy" />} />
         <Route path="/terms-and-condition" element={<Legal kind="terms" />} />
         <Route path="*" element={<NotFound />} />

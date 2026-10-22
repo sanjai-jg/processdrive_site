@@ -9,7 +9,6 @@ const pages = [
   { t: 'About us', to: '/about-us', k: 'about company journey timeline leadership vision mission values ceo' },
   { t: 'Careers', to: '/careers', k: 'jobs careers hiring apply work' },
   { t: 'Contact us', to: '/contact-us', k: 'contact phone email address hosur talk project quote' },
-  { t: 'Certifications', to: '/certifications', k: 'isms iso 27001 ai certified badges partners verified' },
   { t: 'Blogs', to: '/blogs', k: 'blog articles resources insights' },
   ...services.map((s) => ({ t: s.short, to: `/services/${s.slug}`, k: `service ${s.seoDesc}` })),
   ...products.map((p) => ({ t: p.name, to: `/products/${p.slug}`, k: `product ${p.tag} ${p.blurb}` })),
