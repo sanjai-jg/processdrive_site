@@ -44,24 +44,44 @@ function Positioning() {
 
 const pillarIcons = [BadgeCheck, Cpu, UserCheck]
 
+// icon badge straddles the card's top border; pops in on scroll, pulses softly, tilts on hover
+function PillarCard({ pillar, Icon, index }) {
+  return (
+    <Reveal delay={index * 0.12} className="h-full">
+      <div className="card group relative h-full px-7 pb-9 pt-14 text-center transition duration-300 hover:-translate-y-1.5 hover:border-pd-blue/40 hover:shadow-glow">
+        <motion.span
+          initial={{ scale: 0, rotate: -40 }}
+          whileInView={{ scale: 1, rotate: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ type: 'spring', stiffness: 260, damping: 16, delay: index * 0.12 + 0.25 }}
+          className="absolute left-1/2 top-0 -ml-7 -mt-7 block h-14 w-14"
+        >
+          <motion.span
+            aria-hidden="true"
+            className="absolute inset-0 rounded-2xl bg-pd-blue/40"
+            animate={{ scale: [1, 1.6], opacity: [0.45, 0] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut', delay: index * 0.5 }}
+          />
+          <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-pd-gradient text-white shadow-glow ring-[6px] ring-pd-mist transition duration-500 group-hover:rotate-[8deg] group-hover:scale-110">
+            <Icon className="h-6 w-6" />
+          </span>
+        </motion.span>
+        <span className="font-display text-xs font-semibold tracking-[0.2em] text-pd-blue/60">0{index + 1}</span>
+        <h3 className="mt-3 text-xl font-semibold">{pillar.title}</h3>
+        <p className="mt-3 leading-relaxed text-pd-grey">{pillar.text}</p>
+        <span aria-hidden="true" className="absolute inset-x-8 bottom-0 h-0.5 origin-center scale-x-0 rounded-full bg-pd-gradient transition-transform duration-500 group-hover:scale-x-100" />
+      </div>
+    </Reveal>
+  )
+}
+
 function Why() {
   return (
     <section className="section bg-pd-mist">
       <div className="container-pd">
-        <SectionHeading eyebrow="Why ProcessDrive" title={why.title} body={why.body} />
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {why.pillars.map((p, i) => {
-            const I = pillarIcons[i]
-            return (
-              <Reveal key={p.title} delay={i * 0.1}>
-                <div className="card group h-full p-8 transition duration-300 hover:-translate-y-1.5 hover:border-pd-blue/40">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-pd-gradient text-white shadow-glow"><I className="h-6 w-6" /></span>
-                  <h3 className="mt-6 text-xl font-semibold">{p.title}</h3>
-                  <p className="mt-3 leading-relaxed text-pd-grey">{p.text}</p>
-                </div>
-              </Reveal>
-            )
-          })}
+        <SectionHeading wide eyebrow="Why ProcessDrive" title={why.title} body={why.body} />
+        <div className="mt-20 grid gap-x-6 gap-y-14 md:grid-cols-3">
+          {why.pillars.map((p, i) => <PillarCard key={p.title} pillar={p} Icon={pillarIcons[i]} index={i} />)}
         </div>
       </div>
     </section>

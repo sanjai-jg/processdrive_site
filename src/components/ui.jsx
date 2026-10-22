@@ -4,9 +4,9 @@ import NetworkBg from './NetworkBg'
 import Reveal from './Reveal'
 import { footerCta } from '../data/site'
 
-export function SectionHeading({ eyebrow, title, body, center = false, dark = false }) {
+export function SectionHeading({ eyebrow, title, body, center = false, dark = false, wide = false }) {
   return (
-    <Reveal className={`${center ? 'mx-auto text-center' : ''} max-w-3xl`}>
+    <Reveal className={`${center ? 'mx-auto text-center' : ''} ${wide ? 'max-w-none' : 'max-w-3xl'}`}>
       {eyebrow && <span className={`eyebrow ${dark ? '!border-white/20 !bg-white/10 !text-white/80' : ''}`}>{eyebrow}</span>}
       <h2 className={`mt-4 text-3xl font-bold leading-tight sm:text-4xl lg:text-[2.75rem] ${dark ? 'text-white' : ''}`}>{title}</h2>
       {body && <p className={`mt-5 text-lg leading-relaxed ${dark ? 'text-white/70' : 'text-pd-grey'}`}>{body}</p>}

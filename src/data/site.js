@@ -35,7 +35,7 @@ export const positioning = {
 
 export const why = {
   title: 'Every Project, Delivered by Certified AI Talent',
-  body: 'Every employee and strategist at ProcessDrive holds active AI certification. This isn’t a marketing claim; it’s how we hire, how we train, and how we operate. When you work with ProcessDrive, you’re working with a team fluent in large language models, intelligent automation, and applied machine learning, not a generalist dev shop experimenting with AI on the side.',
+  body: 'Every employee and strategist at ProcessDrive holds active AI certification. It’s how we hire, train and operate, so you work with a team fluent in LLMs, intelligent automation and applied machine learning.',
   pillars: [
     { title: 'AI-Certified, Always Current', text: 'Our team maintains active certifications across leading AI platforms and continuously upskills as the technology evolves, so your solution is never built on outdated thinking.' },
     { title: 'AI-Native by Design', text: 'We don’t retrofit AI into legacy architecture. Every ProcessDrive product is architected AI-first, from data pipelines to user experience.' },
