@@ -1,6 +1,7 @@
 import { Component, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { ContactShadows } from '@react-three/drei'
+import { Decal } from '@react-three/drei'
+import logoUrl from '../../assets/PD_Logo.png'
 import * as THREE from 'three'
 
 // Interactive 3D robot (adapted from the 21st.dev "robot-hero" component, JSX, no navbar/background text).
@@ -105,16 +106,52 @@ function RobotEye({ position, rotation, scale = 1, blinkDuration = 0.15, blinkCy
   )
 }
 
+// transparent-background logo, downscaled from the 3420px source to a GPU-friendly size
+function useLogoTexture() {
+  const [tex, setTex] = useState(null)
+  useEffect(() => {
+    let t
+    const img = new Image()
+    img.onload = () => {
+      const s = 1024, c = document.createElement('canvas')
+      c.width = c.height = s
+      c.getContext('2d').drawImage(img, 0, 0, s, s)
+      t = new THREE.CanvasTexture(c)
+      t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8
+      setTex(t)
+    }
+    img.src = logoUrl
+    return () => t?.dispose()
+  }, [])
+  return tex
+}
+
+// soft radial blob: dark core, long feathered edge
+function makeShadowTexture() {
+  const s = 256, c = document.createElement('canvas')
+  c.width = c.height = s
+  const x = c.getContext('2d')
+  const g = x.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2)
+  g.addColorStop(0, 'rgba(10,16,32,0.75)')
+  g.addColorStop(0.35, 'rgba(10,16,32,0.45)')
+  g.addColorStop(0.7, 'rgba(10,16,32,0.12)')
+  g.addColorStop(1, 'rgba(10,16,32,0)')
+  x.fillStyle = g; x.fillRect(0, 0, s, s)
+  const t = new THREE.CanvasTexture(c)
+  t.colorSpace = THREE.SRGBColorSpace
+  return t
+}
+
 function makeTextures() {
   const size = 512
   const cC = document.createElement('canvas'), cB = document.createElement('canvas')
   cC.width = cB.width = cC.height = cB.height = size
   const xC = cC.getContext('2d'), xB = cB.getContext('2d')
-  xC.fillStyle = '#dcdcdc'; xC.fillRect(0, 0, size, size)
+  xC.fillStyle = '#ffffff'; xC.fillRect(0, 0, size, size)
   xB.fillStyle = '#808080'; xB.fillRect(0, 0, size, size)
   for (let i = 0; i < 10000; i++) {
     const x = Math.random() * size, y = Math.random() * size, r = 0.5 + Math.random() * 1.5, dark = Math.random() > 0.15
-    xC.beginPath(); xC.arc(x, y, r, 0, Math.PI * 2); xC.fillStyle = dark ? '#222' : '#ddd'; xC.fill()
+    xC.beginPath(); xC.arc(x, y, r, 0, Math.PI * 2); xC.fillStyle = dark ? '#b4bac4' : '#ffffff'; xC.fill()
     xB.beginPath(); xB.arc(x, y, r, 0, Math.PI * 2); xB.fillStyle = dark ? '#000' : '#fff'; xB.fill()
   }
   const a = new THREE.CanvasTexture(cC), b = new THREE.CanvasTexture(cB)
@@ -136,6 +173,9 @@ function Robot({ color, screenColor, glow, blinkCycle, groupScale, wrap }) {
   const timer = useRef(null)
   const body = useRef(null), head = useRef(null)
   const textures = useMemo(makeTextures, [])
+  const logo = useLogoTexture()
+  const shadowTex = useMemo(makeShadowTexture, [])
+  useEffect(() => () => shadowTex.dispose(), [shadowTex])
   useEffect(() => () => { clearTimeout(timer.current); textures.colorMap.dispose(); textures.bumpMap.dispose() }, [textures])
 
   useFrame((state, delta) => {
@@ -175,7 +215,19 @@ function Robot({ color, screenColor, glow, blinkCycle, groupScale, wrap }) {
   }
   return (
     <group ref={body} position={[0, -0.3, 0]} onPointerDown={onDown} onPointerOver={() => (document.body.style.cursor = 'pointer')} onPointerOut={() => (document.body.style.cursor = 'auto')}>
-      <mesh><sphereGeometry args={[0.43, 64, 64, 0, Math.PI * 2, Math.PI * 0.15, Math.PI * 0.85]} />{chassis}</mesh>
+      {/* ground shadow: follows the robot, sits just under the sphere */}
+      <mesh position={[0, -0.5, 0.02]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
+        <planeGeometry args={[1.5, 0.85]} />
+        <meshBasicMaterial map={shadowTex} transparent depthWrite={false} toneMapped={false} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[0.43, 64, 64, 0, Math.PI * 2, Math.PI * 0.15, Math.PI * 0.85]} />{chassis}
+        {logo && (
+          <Decal position={[0, 0.09, 0.41]} rotation={[0, 0, 0]} scale={0.3}>
+            <meshStandardMaterial map={logo} transparent roughness={0.6} polygonOffset polygonOffsetFactor={-4} />
+          </Decal>
+        )}
+      </mesh>
       <mesh position={[0, BODY.bodyBevelY, 0]} rotation={[Math.PI / 2, 0, 0]}><torusGeometry args={[BODY.bodyBevelR, BODY.bodyBevelT, 32, 64]} />{chassis}</mesh>
       <mesh position={[0, 0.38, 0]}><latheGeometry args={[neck, 64]} />{chassis}</mesh>
       <group ref={head} position={[0, 0.6, 0]}>
@@ -198,7 +250,7 @@ class Boundary extends Component {
   render() { return this.state.failed ? null : this.props.children }
 }
 
-export default function RobotMascot({ eventSource, className = '', color = '#cfd2d8', screenColor = '#2f9bff', glow = 1.3, blinkCycle = 3, scale = 2.15 }) {
+export default function RobotMascot({ eventSource, className = '', color = '#f4f6fa', screenColor = '#2f9bff', glow = 1.3, blinkCycle = 3, scale = 1.9 }) {
   const wrap = useRef(null)
   const [on, setOn] = useState(false)
   useEffect(() => {
@@ -215,7 +267,6 @@ export default function RobotMascot({ eventSource, className = '', color = '#cfd
           <directionalLight position={[2, 5, 4]} intensity={1.4} />
           <directionalLight position={[-4, 2, 3]} intensity={0.6} color="#cfe6ff" />
           <ResponsiveGroup scale={scale}>
-            <ContactShadows position={[0, -0.79, 0]} opacity={0.5} scale={9} resolution={512} blur={2.2} far={2.5} color="#0a1020" />
             <Robot wrap={wrap} color={color} screenColor={screenColor} glow={glow} blinkCycle={blinkCycle} groupScale={scale} />
           </ResponsiveGroup>
         </Canvas>
