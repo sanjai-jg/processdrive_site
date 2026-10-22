@@ -261,7 +261,6 @@ export const about = {
     title: 'A Word from Our CEO',
     quote: 'When we started ProcessDrive, our focus was process optimization: helping businesses do what they already do, better. AI changed the question. It’s no longer about optimizing the old way of working; it’s about rebuilding it from the ground up with intelligence at the core. That’s why every person on this team is AI-certified, and why every product and service we build starts with AI, not ends with it.',
     by: 'Saravanan Sivalingam, CEO',
-    placeholder: true,
   },
   way: {
     title: 'The ProcessDrive Way. That’s Why We Stay.',
@@ -299,6 +298,17 @@ export const faq = [
 // Use files in /public/life (src: '/life/diwali-2025.jpg') or any image URL. Titles show on each photo.
 // The Unsplash photos below are stand-ins until real team and event pictures are supplied.
 const u = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=700&q=80`
+// Background photos for the "ProcessDrive Way" panels, one per point in about.way.points (same order).
+// Stand-ins: replace each with your own image, e.g. import wayOne from '../assets/culture/way-1.jpg' and list it here.
+const big = (id) => u(id).replace('w=700', 'w=1400')
+export const wayImages = [
+  big('photo-1521737711867-e3b97375f902'), // Certification-Backed Careers
+  big('photo-1552664730-d307ca884978'), // Continuous Learning Culture
+  big('photo-1522071820081-009f0129c71c'), // Flat, Collaborative Structure
+  big('photo-1556761175-b413da4baf72'), // Real Ownership
+  big('photo-1573164713714-d95e436ab8d6'), // People First, Always
+]
+
 export const lifeGallery = [
   { src: u('photo-1522071820081-009f0129c71c'), title: 'Team celebration' },
   { src: u('photo-1552664730-d307ca884978'), title: 'Workshop day' },
