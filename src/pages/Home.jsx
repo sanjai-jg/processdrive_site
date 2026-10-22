@@ -8,6 +8,10 @@ import rentasstLogo from '../assets/products/nav/rentasst.png'
 import aim2cLogo from '../assets/products/nav/aim2c.png'
 import ragifiLogo from '../assets/products/nav/ragifi.png'
 import careitLogo from '../assets/products/CareIT (2).png'
+import avaliaLogo from '../assets/Partnes/avalia.png'
+import axentivLogo from '../assets/Partnes/axentiv-logo.png'
+import careitWhiteLogo from '../assets/Partnes/careit-white.png'
+import cuelebreLogo from '../assets/Partnes/cuelebre.png'
 
 const productLogos = { rentasst: rentasstLogo, aim2c: aim2cLogo, ragifi: ragifiLogo }
 import Seo from '../components/Seo'
@@ -449,6 +453,28 @@ function Products() {
   )
 }
 
+// Odoo customers: trimmed logos in src/assets/odoo-customers/web/. A file name maps to a display name here; unknown files get a tidy name from the file name.
+const odooNames = {
+  'apt-logo': 'Apt Tech Engineering', 'bluewave-computers': 'Bluewave Computers', costumewala: 'Costumewala', galaxyinternationaltours: 'Galaxy International Tours',
+  'image-54': 'Harbest Agro', 'image-56': 'VSR Agro Products', nutans: 'Nutan’s', 'swamy-super-mart': 'Swamy Super Mart',
+  'velan-pharma-surgicals': 'Velan Pharma Surgicals', 'vivasayi-fresh': 'Vivasayi Fresh',
+}
+const odooFiles = import.meta.glob('../assets/odoo-customers/web/*.{png,jpg,jpeg,webp,svg}', { eager: true, import: 'default' })
+const odooCustomers = Object.entries(odooFiles)
+  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+  .map(([path, logo]) => {
+    const key = path.split('/').pop().replace(/\.[^.]+$/, '')
+    return { logo, name: odooNames[key] || key.replace(/[-_]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()) }
+  })
+
+// client logos (src/assets/Partnes/), each on the card colour its logo was designed for; clients without a logo fall back to their name
+const clientBrand = {
+  'Avlia Digital': { logo: avaliaLogo, bg: 'bg-black border-black' },
+  Careit: { logo: careitWhiteLogo, bg: 'bg-[#04808C] border-[#04808C]' },
+  Axentiv: { logo: axentivLogo, bg: 'bg-white' },
+  Cuelebre: { logo: cuelebreLogo, bg: 'bg-white' },
+}
+
 function Trusted() {
   const list = [...trusted.clients, ...trusted.clients, ...trusted.clients, ...trusted.clients]
   return (
@@ -458,12 +484,33 @@ function Trusted() {
       </div>
       <div className="mt-12 overflow-hidden" aria-label="Our clients">
         <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
-          {[...list, ...list].map((c, i) => (
-            <span key={i} className="card flex h-24 w-64 shrink-0 items-center justify-center font-display text-xl font-bold text-pd-grey">{c}</span>
+          {[...list, ...list].map((c, i) => {
+            const brand = clientBrand[c]
+            return (
+              <span key={i} className={`card flex h-24 w-64 shrink-0 items-center justify-center px-8 font-display text-xl font-bold text-pd-grey transition duration-300 hover:-translate-y-1 hover:shadow-glow ${brand?.bg || ''}`}>
+                {brand ? <img src={brand.logo} alt={c} loading="lazy" draggable="false" className="h-14 w-auto max-w-full object-contain" /> : c}
+              </span>
+            )
+          })}
+        </div>
+      </div>
+      <div className="container-pd mt-14">
+        <p className="flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.2em] text-pd-grey">
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-transparent to-pd-line" />
+          ProcessDrive × Odoo customers
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-l from-transparent to-pd-line" />
+        </p>
+      </div>
+      {/* second row runs the other way, slower; edges fade out */}
+      <div className="mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]" aria-label="Our Odoo customers">
+        <div className="flex w-max animate-marquee gap-5 hover:[animation-play-state:paused]" style={{ animationDirection: 'reverse', animationDuration: '55s' }}>
+          {[...odooCustomers, ...odooCustomers].map((c, i) => (
+            <span key={`${c.name}-${i}`} aria-hidden={i >= odooCustomers.length ? 'true' : undefined} className="card flex h-24 w-52 shrink-0 items-center justify-center bg-white px-6 transition duration-300 hover:-translate-y-1 hover:shadow-glow">
+              <img src={c.logo} alt={c.name} loading="lazy" draggable="false" className="max-h-16 max-w-[10rem] object-contain" />
+            </span>
           ))}
         </div>
       </div>
-      <p className="container-pd mt-8 text-center text-sm text-pd-grey">ProcessDrive × Odoo customers: logos to be added here from the current site.</p>
     </section>
   )
 }
