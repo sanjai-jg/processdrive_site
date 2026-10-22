@@ -1,9 +1,15 @@
-import { createRef, lazy, Suspense, useMemo, useRef } from 'react'
+import { createRef, lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowRight, BadgeCheck, Cpu, UserCheck, Layers, Building2, User, Bot, Smartphone, ClipboardCheck, Sparkles, Zap, RefreshCw, Eye, BarChart3, Users } from 'lucide-react'
+import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { ArrowRight, BadgeCheck, Cpu, UserCheck, Layers, Building2, User, Bot, Smartphone, ClipboardCheck, Sparkles, Zap, RefreshCw, Eye, BarChart3, Users, Send, CheckCheck, ShieldCheck, Award, GraduationCap, BookOpen } from 'lucide-react'
 import AnimatedBeam from '../components/ui/animated-beam'
 import pdLogo from '../assets/PD_Logo.png'
+import rentasstLogo from '../assets/products/nav/rentasst.png'
+import aim2cLogo from '../assets/products/nav/aim2c.png'
+import ragifiLogo from '../assets/products/nav/ragifi.png'
+import careitLogo from '../assets/products/CareIT (2).png'
+
+const productLogos = { rentasst: rentasstLogo, aim2c: aim2cLogo, ragifi: ragifiLogo }
 import Seo from '../components/Seo'
 import Hero from '../components/Hero'
 import Reveal from '../components/Reveal'
@@ -45,70 +51,239 @@ function Positioning() {
 
 const pillarIcons = [BadgeCheck, Cpu, UserCheck]
 
-// icon badge straddles the card's top border; pops in on scroll, pulses softly, tilts on hover
-function PillarCard({ pillar, Icon, index }) {
+// ---- "Why ProcessDrive": three selectable points on the left, an animated scene for the selected one on the right ----
+const sceneCircle = 'absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full'
+
+// 1. certified: a badge at the centre, certificates orbiting it
+function SceneCertified() {
+  const orbit = [[GraduationCap, '50%', '4%'], [Award, '96%', '50%'], [ShieldCheck, '50%', '96%'], [BookOpen, '4%', '50%']]
   return (
-    <Reveal delay={index * 0.12} className="h-full">
-      <div className="card group relative h-full px-7 pb-9 pt-14 text-center transition duration-300 hover:-translate-y-1.5 hover:border-pd-blue/40 hover:shadow-glow">
-        <motion.span
-          initial={{ scale: 0, rotate: -40 }}
-          whileInView={{ scale: 1, rotate: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ type: 'spring', stiffness: 260, damping: 16, delay: index * 0.12 + 0.25 }}
-          className="absolute left-1/2 top-0 -ml-7 -mt-7 block h-14 w-14"
-        >
-          <motion.span
-            aria-hidden="true"
-            className="absolute inset-0 rounded-2xl bg-pd-blue/40"
-            animate={{ scale: [1, 1.6], opacity: [0.45, 0] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut', delay: index * 0.5 }}
-          />
-          <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-pd-gradient text-white shadow-glow ring-[6px] ring-pd-mist transition duration-500 group-hover:rotate-[8deg] group-hover:scale-110">
-            <Icon className="h-6 w-6" />
+    <div className="relative h-full w-full">
+      {[0, 1].map((i) => <motion.span key={i} aria-hidden="true" className="absolute inset-[26%] rounded-full border border-pd-green/50" animate={{ scale: [1, 1.9], opacity: [0.6, 0] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeOut', delay: i * 1.6 }} />)}
+      <span aria-hidden="true" className="absolute inset-[4%] rounded-full border border-dashed border-white/15" />
+      <motion.div className="absolute inset-0" animate={{ rotate: 360 }} transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}>
+        {orbit.map(([I, left, top], i) => (
+          <span key={i} className={`${sceneCircle} h-12 w-12 bg-white/10 text-white ring-1 ring-white/25 backdrop-blur`} style={{ left, top }}>
+            <motion.span animate={{ rotate: -360 }} transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}><I className="h-5 w-5" /></motion.span>
           </span>
-        </motion.span>
-        <span className="font-display text-xs font-semibold tracking-[0.2em] text-pd-blue/60">0{index + 1}</span>
-        <h3 className="mt-3 text-xl font-semibold">{pillar.title}</h3>
-        <p className="mt-3 leading-relaxed text-pd-grey">{pillar.text}</p>
-        <span aria-hidden="true" className="absolute inset-x-8 bottom-0 h-0.5 origin-center scale-x-0 rounded-full bg-pd-gradient transition-transform duration-500 group-hover:scale-x-100" />
-      </div>
-    </Reveal>
+        ))}
+      </motion.div>
+      <span className={`${sceneCircle} h-[34%] w-[34%] bg-pd-gradient shadow-glow`} style={{ left: '50%', top: '50%' }}><BadgeCheck className="h-1/2 w-1/2 text-white" /></span>
+    </div>
   )
 }
 
+// 2. AI-native: a chip with data pulses flowing in from every direction
+function SceneNative() {
+  const spokes = Array.from({ length: 8 }, (_, i) => { const a = (i * Math.PI) / 4; return [50 + Math.cos(a) * 40, 50 + Math.sin(a) * 40] })
+  return (
+    <div className="relative h-full w-full">
+      <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" fill="none" aria-hidden="true">
+        {spokes.map(([x, y], i) => (
+          <g key={i}>
+            <line x1="50" y1="50" x2={x} y2={y} stroke="rgba(255,255,255,.14)" strokeWidth="0.6" />
+            <motion.line x1={x} y1={y} x2="50" y2="50" stroke={i % 2 ? '#01A95C' : '#3b9cff'} strokeWidth="1.2" strokeLinecap="round" initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: [0, 0.35, 0], pathOffset: [0, 0.65, 1], opacity: [0, 1, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }} />
+            <circle cx={x} cy={y} r="2.2" fill="#0A1020" stroke="rgba(255,255,255,.45)" strokeWidth="0.6" />
+          </g>
+        ))}
+      </svg>
+      <span className="absolute left-1/2 top-1/2 flex h-[30%] w-[30%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-3xl bg-pd-gradient shadow-glow">
+        <motion.span aria-hidden="true" className="absolute inset-0 rounded-3xl bg-pd-blue/50" animate={{ scale: [1, 1.5], opacity: [0.5, 0] }} transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }} />
+        <Cpu className="relative h-1/2 w-1/2 text-white" />
+      </span>
+    </div>
+  )
+}
+
+// 3. human oversight: a person and a machine, checkpoints between them lighting up in turn
+function SceneOversight() {
+  return (
+    <div className="relative h-full w-full">
+      <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" fill="none" aria-hidden="true">
+        <line x1="20" y1="50" x2="80" y2="50" stroke="rgba(255,255,255,.18)" strokeWidth="0.8" strokeDasharray="1.5 2.5" />
+        <motion.line x1="20" y1="50" x2="80" y2="50" stroke="url(#ov-grad)" strokeWidth="1.4" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1, 0], opacity: [1, 1, 0.2, 0] }} transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', times: [0, 0.55, 0.85, 1] }} />
+        <defs><linearGradient id="ov-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#3b9cff" /><stop offset="100%" stopColor="#01A95C" /></linearGradient></defs>
+      </svg>
+      {[34, 50, 66].map((x, i) => (
+        <motion.span key={x} className={`${sceneCircle} h-8 w-8 bg-pd-navy text-pd-green ring-1 ring-white/30`} style={{ left: `${x}%`, top: '50%' }}
+          animate={{ scale: [1, 1.25, 1], boxShadow: ['0 0 0 0 rgba(1,169,92,0)', '0 0 22px 4px rgba(1,169,92,.55)', '0 0 0 0 rgba(1,169,92,0)'] }} transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 2.8, delay: 0.5 + i * 0.7 }}>
+          <ShieldCheck className="h-4 w-4" />
+        </motion.span>
+      ))}
+      {[[UserCheck, '20%', 'Human judgment', 'bg-white/10'], [Bot, '80%', 'Machine speed', 'bg-pd-gradient shadow-glow']].map(([I, left, label, bg]) => (
+        <div key={label} className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 text-center" style={{ left }}>
+          <span className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full text-white ring-1 ring-white/25 ${bg}`}><I className="h-7 w-7" /></span>
+          <p className="mt-3 whitespace-nowrap text-[11px] font-semibold uppercase tracking-wider text-white/70">{label}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const whyScenes = [SceneCertified, SceneNative, SceneOversight]
+const WHY_SECONDS = 7
+
 function Why() {
+  const [active, setActive] = useState(0)
+  const [hover, setHover] = useState(false)
+  const reduce = useReducedMotion()
+  const next = () => { if (!reduce) setActive((a) => (a + 1) % why.pillars.length) }
+  const Scene = whyScenes[active]
   return (
     <section className="section bg-pd-mist">
       <div className="container-pd">
         <SectionHeading wide eyebrow="Why ProcessDrive" title={why.title} body={why.body} />
-        <div className="mt-20 grid gap-x-6 gap-y-14 md:grid-cols-3">
-          {why.pillars.map((p, i) => <PillarCard key={p.title} pillar={p} Icon={pillarIcons[i]} index={i} />)}
-        </div>
+        <Reveal className="mt-14">
+          <div className="grid items-stretch gap-8 lg:grid-cols-[1fr_1.05fr] lg:gap-12" onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)}>
+            <div className="flex flex-col gap-3">
+              {why.pillars.map((p, i) => {
+                const on = active === i
+                const Icon = pillarIcons[i]
+                return (
+                  <button key={p.title} type="button" onClick={() => setActive(i)} aria-pressed={on}
+                    className={`group relative overflow-hidden rounded-3xl border p-6 text-left transition duration-300 ${on ? 'border-transparent bg-white shadow-glow' : 'border-pd-line bg-white/60 hover:border-pd-blue/40 hover:bg-white'}`}>
+                    <div className="flex items-center gap-4">
+                      <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition duration-500 ${on ? 'bg-pd-gradient text-white shadow-glow' : 'bg-pd-blue/10 text-pd-blue group-hover:scale-110'}`}><Icon className="h-6 w-6" /></span>
+                      <div className="min-w-0 flex-1">
+                        <span className={`font-display text-[11px] font-bold tracking-[0.2em] transition-colors ${on ? 'text-pd-green' : 'text-pd-blue/50'}`}>0{i + 1}</span>
+                        <h3 className={`text-lg font-semibold leading-snug transition-colors lg:text-xl ${on ? 'text-pd-navy' : 'text-pd-ink/80'}`}>{p.title}</h3>
+                      </div>
+                    </div>
+                    <div className={`grid transition-[grid-template-rows] duration-500 ease-out ${on ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+                      <div className="overflow-hidden"><p className="pb-1 pl-16 pt-4 leading-relaxed text-pd-grey">{p.text}</p></div>
+                    </div>
+                    {on && !reduce && (
+                      <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1 bg-pd-line/70">
+                        <span key={`${active}-bar`} onAnimationEnd={next} className="block h-full origin-left bg-pd-gradient" style={{ animation: `pd-fill ${WHY_SECONDS}s linear forwards`, animationPlayState: hover ? 'paused' : 'running' }} />
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="relative min-h-[20rem] overflow-hidden rounded-[2rem] bg-pd-navy shadow-glow sm:min-h-[26rem]" aria-hidden="true">
+              <NetworkBg className="opacity-30" />
+              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-pd-blue/30 blur-3xl" />
+              <div className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-pd-green/20 blur-3xl" />
+              <AnimatePresence mode="wait">
+                <motion.div key={active} className="absolute inset-0 flex items-center justify-center p-8" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.05 }} transition={{ duration: 0.45 }}>
+                  <div className="aspect-square h-full max-h-[22rem] w-auto max-w-full"><Scene /></div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
 }
 
+const CHAT = [
+  { from: 'human', text: 'Our approvals take three days. Can that be fixed?' },
+  { from: 'ai', text: 'Mapped your workflow. 70% of steps can be automated with review checkpoints.' },
+  { from: 'human', text: 'Keep finance sign-off manual.' },
+  { from: 'ai', text: 'Done. Prototype ready for your team to test.', done: true },
+]
+// stage -> what is on screen: 0 empty, 1 msg0, 2 typing, 3 msg1, 4 msg2, 5 typing, 6 msg3. Each entry is how long to wait before moving to the next stage.
+const CHAT_WAIT = [700, 1100, 1500, 1800, 1500, 1200, 6500]
+const chatTags = [[Users, 'Certified specialists with your team from day one'], [Zap, 'Faster than a traditional dev cycle'], [ShieldCheck, 'Humans keep the judgment calls']]
+
+function TypingDots() {
+  return (
+    <span className="flex items-center gap-1.5 px-1 py-1.5" aria-hidden="true">
+      {[0, 1, 2].map((i) => <motion.span key={i} className="h-2 w-2 rounded-full bg-white/80" animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }} transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15 }} />)}
+    </span>
+  )
+}
+
+function ChatMessage({ m }) {
+  const ai = m.from === 'ai'
+  return (
+    <motion.div layout initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+      className={`flex items-end gap-3 ${ai ? 'flex-row-reverse' : ''}`}>
+      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${ai ? 'bg-pd-gradient shadow-glow' : 'bg-white/15'}`}>{ai ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}</span>
+      <div className={`max-w-[80%] ${ai ? 'items-end' : ''} flex flex-col gap-2`}>
+        <p className={`rounded-2xl px-5 py-3 text-sm leading-relaxed ${ai ? 'rounded-br-sm bg-gradient-to-br from-pd-blue/50 to-pd-blue/25 text-white ring-1 ring-pd-blue/40' : 'rounded-bl-sm bg-white/10 text-white/90 ring-1 ring-white/10'}`}>{m.text}</p>
+        {m.done && (
+          <motion.span initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.35, type: 'spring' }} className="inline-flex items-center gap-1.5 rounded-full bg-pd-green/15 px-3 py-1 text-xs font-semibold text-pd-green ring-1 ring-pd-green/30">
+            <CheckCheck className="h-3.5 w-3.5" />Prototype ready to test
+          </motion.span>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+function ChatWindow() {
+  const ref = useRef(null)
+  const inView = useInView(ref, { margin: '-80px' })
+  const [stage, setStage] = useState(0)
+  const reduce = useReducedMotion()
+
+  useEffect(() => {
+    if (reduce) { setStage(6); return }
+    if (!inView) { setStage(0); return }
+    const t = setTimeout(() => setStage((s) => (s >= 6 ? 0 : s + 1)), CHAT_WAIT[stage])
+    return () => clearTimeout(t)
+  }, [stage, inView, reduce])
+
+  const shown = [stage >= 1 && CHAT[0], stage >= 3 && CHAT[1], stage >= 4 && CHAT[2], stage >= 6 && CHAT[3]].filter(Boolean)
+  const typing = stage === 2 || stage === 5
+  return (
+    <div ref={ref} className="relative">
+      <div aria-hidden="true" className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-pd-blue/25 to-pd-green/15 blur-3xl" />
+      <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-white/[0.06] shadow-2xl shadow-black/40 backdrop-blur-xl" role="img" aria-label="Example conversation: a customer asks to speed up approvals, the AI maps the workflow and has a prototype ready.">
+        <div className="flex items-center gap-3 border-b border-white/10 bg-white/5 px-5 py-4">
+          <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-pd-gradient shadow-glow">
+            <Bot className="h-5 w-5" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-pd-green ring-2 ring-pd-navy"><motion.span className="absolute inset-0 rounded-full bg-pd-green" animate={{ scale: [1, 2.2], opacity: [0.6, 0] }} transition={{ duration: 1.8, repeat: Infinity }} /></span>
+          </span>
+          <div className="leading-tight">
+            <p className="font-display text-sm font-bold">ProcessDrive AI</p>
+            <p className="text-xs text-pd-green">Online · with your team</p>
+          </div>
+          <Sparkles className="ml-auto h-4 w-4 text-white/40" />
+        </div>
+        <div className="flex min-h-[21rem] flex-col justify-end gap-4 px-5 py-6 sm:min-h-[23rem]" aria-hidden="true">
+          <AnimatePresence initial={false}>
+            {shown.map((m) => <ChatMessage key={m.text} m={m} />)}
+            {typing && (
+              <motion.div key="typing" layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex flex-row-reverse items-end gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-pd-gradient"><Bot className="h-4 w-4" /></span>
+                <span className="rounded-2xl rounded-br-sm bg-pd-blue/30 px-4 ring-1 ring-pd-blue/40"><TypingDots /></span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        <div className="flex items-center gap-3 border-t border-white/10 bg-white/5 px-5 py-3.5" aria-hidden="true">
+          <span className="flex-1 truncate rounded-full bg-white/5 px-4 py-2.5 text-sm text-white/40 ring-1 ring-white/10">Describe your workflow…</span>
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-pd-gradient"><Send className="h-4 w-4" /></span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function TalksBack() {
-  const bubbles = [
-    { from: 'human', text: 'Our approvals take three days. Can that be fixed?', icon: User },
-    { from: 'ai', text: 'Mapped your workflow. 70% of steps can be automated with review checkpoints.', icon: Bot },
-    { from: 'human', text: 'Keep finance sign-off manual.', icon: User },
-    { from: 'ai', text: 'Done. Prototype ready for your team to test.', icon: Bot },
-  ]
   return (
     <section className="relative overflow-hidden bg-pd-navy py-24 text-white sm:py-32">
       <div className="absolute inset-0 bg-[radial-gradient(50%_80%_at_20%_20%,rgba(0,120,232,.3),transparent)]" />
+      <NetworkBg className="opacity-30" />
       <div className="container-pd relative grid items-center gap-14 lg:grid-cols-2">
-        <SectionHeading dark eyebrow="Human insight · machine capability" title={talksBack.title} body={talksBack.body} />
-        <div className="space-y-4" aria-hidden="true">
-          {bubbles.map((b, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20, x: b.from === 'human' ? -20 : 20 }} whileInView={{ opacity: 1, y: 0, x: 0 }} viewport={{ once: true, margin: '-40px' }} transition={{ delay: i * 0.25, duration: 0.5 }} className={`flex items-start gap-3 ${b.from === 'ai' ? 'flex-row-reverse' : ''}`}>
-              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${b.from === 'ai' ? 'bg-pd-gradient' : 'bg-white/15'}`}><b.icon className="h-4 w-4" /></span>
-              <p className={`max-w-sm rounded-2xl px-5 py-3 text-sm leading-relaxed ${b.from === 'ai' ? 'rounded-tr-sm bg-pd-blue/30 text-white' : 'rounded-tl-sm bg-white/10 text-white/85'}`}>{b.text}</p>
-            </motion.div>
-          ))}
+        <div>
+          <SectionHeading dark eyebrow="Human insight · machine capability" title={talksBack.title} body={talksBack.body} />
+          <Reveal delay={0.2} className="mt-8">
+            <ul className="space-y-3">
+              {chatTags.map(([Icon, t]) => (
+                <li key={t} className="flex items-center gap-3 text-sm font-medium text-white/85">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-pd-green ring-1 ring-white/10"><Icon className="h-4 w-4" /></span>{t}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
+        <ChatWindow />
       </div>
     </section>
   )
@@ -262,11 +437,11 @@ function Products() {
         <div className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2 xl:gap-y-10">
           {products.map((p, i) => (
             <Reveal key={p.slug} delay={(i % 2) * 0.1} className="pt-12 xl:pt-0">
-              <ProductCard tone={i} name={p.name} tag={p.status === 'soon' ? null : p.tag} text={p.blurb} icon={productIcons[p.slug] || Cpu} logo={p.logo} soon={p.status === 'soon'} to={`/products/${p.slug}`} cta={`Explore ${p.name}`} />
+              <ProductCard tone={i} name={p.name} tag={p.status === 'soon' ? null : p.tag} text={p.blurb} icon={productIcons[p.slug] || Cpu} logo={productLogos[p.slug] || p.logo} soon={p.status === 'soon'} to={`/products/${p.slug}`} cta={`Explore ${p.name}`} />
             </Reveal>
           ))}
           <Reveal delay={0.1} className="pt-12 xl:pt-0">
-            <ProductCard tone={3} name={careit.name} tag="ProcessDrive-supported platform" text={careit.text} icon={Building2} logo={careit.logo} />
+            <ProductCard tone={3} name={careit.name} tag="ProcessDrive-supported platform" text={careit.text} icon={Building2} logo={careitLogo} />
           </Reveal>
         </div>
       </div>

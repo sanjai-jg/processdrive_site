@@ -17,15 +17,19 @@ export default function ProductCard({ tone = 0, name, tag, text, icon: Icon, log
   const body = (
     <>
       {/* tile */}
-      <div className={`relative z-10 -mt-12 mx-6 h-44 overflow-hidden rounded-3xl bg-gradient-to-br ${tones[tone % 4]} transition duration-500 group-hover:-translate-y-1 group-hover:rotate-[-1deg] xl:absolute xl:-left-12 xl:top-1/2 xl:mx-0 xl:mt-0 xl:h-48 xl:w-48 xl:-translate-y-1/2 xl:group-hover:-translate-y-[54%]`}
+      <div className={`relative z-10 -mt-12 mx-6 h-44 overflow-hidden rounded-3xl ${logo ? 'bg-white ring-1 ring-pd-line' : `bg-gradient-to-br ${tones[tone % 4]}`} transition duration-500 group-hover:-translate-y-1 group-hover:rotate-[-1deg] xl:absolute xl:-left-12 xl:top-1/2 xl:mx-0 xl:mt-0 xl:h-48 xl:w-48 xl:-translate-y-1/2 xl:group-hover:-translate-y-[54%]`}
         style={{ boxShadow: `0 24px 44px -16px ${glows[tone % 4]}` }}>
-        <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(rgba(0,120,232,.28)_1px,transparent_1px)] [background-size:16px_16px] [mask-image:linear-gradient(135deg,#000,transparent_75%)]" />
-        <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/60 blur-2xl" />
-        <div className="absolute inset-0 flex items-center justify-center p-8">
+        {!logo && <>
+          <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(rgba(0,120,232,.28)_1px,transparent_1px)] [background-size:16px_16px] [mask-image:linear-gradient(135deg,#000,transparent_75%)]" />
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/60 blur-2xl" />
+        </>}
+        {logo && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1 bg-pd-gradient opacity-70 transition-opacity duration-300 group-hover:opacity-100" />}
+        <div className={`absolute inset-0 flex items-center justify-center ${logo ? 'p-3' : 'p-8'}`}>
           {logo
-            ? <img src={logo} alt={`${name} logo`} className="max-h-full max-w-[70%] object-contain" loading="lazy" />
+            ? <img src={logo} alt={`${name} logo`} className="max-h-full w-full object-contain transition duration-500 group-hover:scale-105" loading="lazy" />
             : Icon && <span className={`flex h-20 w-20 items-center justify-center rounded-2xl border border-white bg-white/80 shadow-card backdrop-blur ${icons[tone % 4]}`}><Icon className="h-10 w-10" /></span>}
         </div>
+        {logo && <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_-20px_0_26px_-14px_rgba(10,16,32,.24)]" />}
         {soon && <span className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-pd-green">Coming soon</span>}
       </div>
       {/* text */}

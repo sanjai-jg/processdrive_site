@@ -121,13 +121,16 @@ export const products = [
   {
     slug: 'ragifi',
     name: 'RAGifi',
-    tag: 'Coming soon',
-    // TODO: product description pending from ProcessDrive.
-    blurb: 'RAGifi is coming soon.',
-    hero: 'Coming Soon',
-    features: [],
-    stat: 'Coming soon',
-    status: 'soon',
+    tag: 'The Ultimate Plug & Play RAG Solution',
+    blurb: 'Zero configuration required. Simply connect your preferred LLM, choose your vector database, upload your data, and start having intelligent conversations. Ready in under 5 minutes.',
+    hero: 'Plug & Play RAG, Ready in Under 5 Minutes',
+    features: [
+      { title: 'Bring Your Own LLM', text: 'Connect the large language model you already prefer. Nothing to configure first.' },
+      { title: 'Choose Your Vector Database', text: 'Pick the vector database you want to store and search your data in.' },
+      { title: 'Upload, Then Start Chatting', text: 'Upload your data and start having intelligent conversations with it. Ready in under 5 minutes.' },
+    ],
+    stat: 'Zero configuration required',
+    status: 'live',
   },
 ]
 

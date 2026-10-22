@@ -30,6 +30,7 @@
   .hero-main .mt-8 { margin-top: 1.25rem; }
   .hero-visual { zoom: .8; }
 }
+@keyframes pd-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes beam-dash { to { stroke-dashoffset: var(--beam-travel); } }
 @media (prefers-reduced-motion: reduce) {
   .beam-pulse { display: none; }
