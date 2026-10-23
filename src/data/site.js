@@ -265,7 +265,7 @@ export const about = {
   },
   ceo: {
     title: 'A Word from Our CEO',
-    quote: 'When we started ProcessDrive, our focus was process optimization: helping businesses do what they already do, better. AI changed the question. It’s no longer about optimizing the old way of working; it’s about rebuilding it from the ground up with intelligence at the core. That’s why every person on this team is AI-certified, and why every product and service we build starts with AI, not ends with it.',
+    quote: 'We started ProcessDrive to help businesses do what they already do, better. AI changed the question. It’s now about rebuilding it from the ground up with intelligence at the core. That’s why every person on this team is AI-certified, and every product we build starts with AI.',
     by: 'Saravanan Sivalingam, CEO',
   },
   way: {
