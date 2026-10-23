@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react'
+import NetworkBg from './NetworkBg'
 import { company, nav } from '../data/site'
 
 const ICONS = {
@@ -12,10 +13,16 @@ const ICONS = {
 
 export default function Footer() {
   return (
-    <footer className="bg-pd-navy text-white/70">
+    <footer className="relative isolate overflow-hidden bg-pd-navy text-white/70">
+      {/* backdrop: colour glows, a faded dot grid, a still node network and a gradient hairline along the top edge */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(60%_70%_at_8%_0%,rgba(0,120,232,.30),transparent),radial-gradient(55%_70%_at_95%_100%,rgba(1,169,92,.26),transparent)]" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 [background-image:radial-gradient(rgba(255,255,255,.14)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,#000,transparent_85%)]" />
+      <NetworkBg still className="-z-10 opacity-40" />
+      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-pd-blue to-transparent" />
+      <span aria-hidden="true" className="pointer-events-none absolute -right-24 top-10 -z-10 h-72 w-72 rounded-full bg-pd-blue/15 blur-3xl" />
       <div className="container-pd grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_.8fr_1.2fr_.8fr]">
         <div>
-          <span className="inline-block rounded-xl bg-white p-3"><img src="/logo.jpg" alt="ProcessDrive" className="h-10 w-auto" /></span>
+          <Link to="/" aria-label="ProcessDrive home" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="inline-block rounded-xl bg-white p-3 transition hover:shadow-glow"><img src="/logo.jpg" alt="ProcessDrive" className="h-10 w-auto" /></Link>
           <address className="mt-6 space-y-3 text-sm not-italic">
             <p className="flex gap-3"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-pd-green" />{company.address}</p>
             <p className="flex gap-3"><Mail className="h-4 w-4 shrink-0 text-pd-green" /><a href={`mailto:${company.email}`} className="hover:text-white">{company.email}</a></p>

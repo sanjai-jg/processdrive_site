@@ -1,7 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import Seo from '../components/Seo'
-import { CtaBand } from '../components/ui'
 import { posts } from '../data/site'
 import { postTitle } from './Blogs'
 
@@ -33,7 +32,6 @@ export default function BlogPost() {
           <div className="mt-6 grid gap-4 md:grid-cols-3">{related.map((r) => <Link key={r.slug} to={`/blogs/posts/${r.slug}`} className="card p-6 font-semibold transition hover:-translate-y-1 hover:text-pd-blue">{postTitle(r)}</Link>)}</div>
         </div>
       </section>
-      <CtaBand />
     </>
   )
 }

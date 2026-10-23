@@ -5,7 +5,7 @@ import Seo from '../components/Seo'
 import Reveal from '../components/Reveal'
 import NetworkBg from '../components/NetworkBg'
 import ScrollExpand from '../components/ui/scroll-expand'
-import { SectionHeading, CtaBand } from '../components/ui'
+import { SectionHeading, DarkCta } from '../components/ui'
 import { getService, services, serviceHeroImages } from '../data/services'
 
 export default function ServicePage() {
@@ -118,7 +118,7 @@ export default function ServicePage() {
         </div>
       </section>
 
-      <CtaBand title={s.closing.title} body={s.closing.text} cta={s.closing.cta} />
+      <DarkCta title={s.closing.title} body={s.closing.text} cta={s.closing.cta} />
     </>
   )
 }

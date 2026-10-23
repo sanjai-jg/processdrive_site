@@ -4,7 +4,7 @@ import { Search } from 'lucide-react'
 import Seo from '../components/Seo'
 import Reveal from '../components/Reveal'
 import NetworkBg from '../components/NetworkBg'
-import { PageHero, CtaBand } from '../components/ui'
+import { PageHero } from '../components/ui'
 import { posts, blogHeading } from '../data/site'
 
 export const postTitle = (p) => p.refreshed || p.title
@@ -39,7 +39,6 @@ export default function Blogs() {
           {!list.length && <p className="mt-10 text-pd-grey">No articles match &ldquo;{q}&rdquo;.</p>}
         </div>
       </section>
-      <CtaBand />
     </>
   )
 }

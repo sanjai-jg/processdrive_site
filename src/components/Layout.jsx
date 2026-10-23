@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
 import SearchModal from './SearchModal'
-import Assistant from './Assistant'
 import ClickSpark from './ui/click-spark'
 
 // what counts as a "button": real buttons, role=button, submit/button inputs, and our .btn-styled links
@@ -25,7 +24,6 @@ export default function Layout() {
       <Header />
       <main id="main"><Outlet /></main>
       <Footer />
-      <Assistant />
       <SearchModal open={search} onClose={() => setSearch(false)} />
     </ClickSpark>
   )

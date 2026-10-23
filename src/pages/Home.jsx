@@ -21,8 +21,8 @@ import CountUp from '../components/CountUp'
 import NetworkBg from '../components/NetworkBg'
 import ProductCard from '../components/ProductCard'
 const RobotMascot = lazy(() => import('../components/ui/robot-mascot'))
-import { SectionHeading, CtaBand } from '../components/ui'
-import { positioning, why, talksBack, dayOne, switching, howWeBuild, products, careit, trusted, blogHeading, posts } from '../data/site'
+import { SectionHeading } from '../components/ui'
+import { positioning, why, talksBack, dayOne, switching, howWeBuild, products, careit, trusted, blogHeading, posts, footerCta } from '../data/site'
 
 function Positioning() {
   const ref = useRef(null)
@@ -542,6 +542,53 @@ function Blog() {
   )
 }
 
+// home page closing call to action: a bold gradient panel with rotating rings around the ProcessDrive mark and three proof chips
+const ctaProof = [[BadgeCheck, '100%', 'AI-certified team'], [ShieldCheck, 'ISMS', 'ISO/IEC 27001 certified'], [Smartphone, '1000+', 'RentAsst installs across India']]
+
+function HomeCta() {
+  return (
+    <section className="relative overflow-hidden bg-white px-3 py-12 sm:px-5 sm:py-16">
+      <Reveal className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-pd-gradient text-white shadow-glow sm:rounded-[2.5rem]">
+        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(60%_80%_at_85%_20%,rgba(255,255,255,.22),transparent),radial-gradient(50%_70%_at_0%_100%,rgba(10,16,32,.45),transparent)]" />
+        <div aria-hidden="true" className="absolute inset-0 [background-image:radial-gradient(rgba(255,255,255,.22)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:linear-gradient(120deg,transparent_30%,#000)]" />
+        <div className="relative grid items-center gap-8 px-6 py-10 sm:px-12 sm:py-12 lg:grid-cols-[1.15fr_.85fr] lg:gap-12 lg:px-16">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider"><Sparkles className="h-3.5 w-3.5" />Start with AI, not add it later</span>
+            <h2 className="mt-4 text-3xl font-extrabold leading-[1.08] sm:text-4xl lg:text-5xl">{footerCta.title}</h2>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">{footerCta.body}</p>
+            <div className="mt-7 flex flex-wrap items-center gap-4">
+              <Link to="/contact-us" className="btn bg-white text-pd-navy shadow-[0_14px_40px_-10px_rgba(0,0,0,.5)] hover:-translate-y-0.5 hover:bg-white/90">{footerCta.cta}<ArrowRight className="h-4 w-4" /></Link>
+            </div>
+          </div>
+          <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
+            {/* rotating rings around the mark, proof chips floating beside it (stacked under it on small screens) */}
+            <div className="relative mx-auto aspect-square w-full max-w-[12rem] sm:max-w-[13rem]">
+              {[100, 74, 48].map((size, i) => (
+                <motion.span key={size} aria-hidden="true" className="absolute left-1/2 top-1/2 rounded-full border border-white/30 border-dashed" style={{ width: `${size}%`, height: `${size}%`, x: '-50%', y: '-50%' }} animate={{ rotate: i % 2 ? -360 : 360 }} transition={{ duration: 40 + i * 20, repeat: Infinity, ease: 'linear' }}>
+                  <span className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-white shadow-[0_0_14px_3px_rgba(255,255,255,.7)]" />
+                </motion.span>
+              ))}
+              <span className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_0_60px_10px_rgba(255,255,255,.35)]">
+                <img src={pdLogo} alt="" className="h-12 w-12" />
+              </span>
+            </div>
+            <ul className="mt-6 grid gap-2.5 sm:grid-cols-3 lg:mt-5 lg:grid-cols-1">
+              {ctaProof.map(([Icon, big, small], i) => (
+                <Reveal as="li" key={big} delay={0.1 + i * 0.1} y={16}>
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/25 bg-white/15 px-4 py-2 backdrop-blur-md">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20"><Icon className="h-5 w-5" /></span>
+                    <div className="leading-tight"><p className="font-display text-lg font-bold">{big}</p><p className="text-xs text-white/80">{small}</p></div>
+                  </div>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  )
+}
+
 export default function Home() {
   return (
     <>
@@ -556,7 +603,7 @@ export default function Home() {
       <Products />
       <Trusted />
       <Blog />
-      <CtaBand />
+      <HomeCta />
     </>
   )
 }

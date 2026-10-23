@@ -35,7 +35,7 @@ function Certified() {
   const R = 78, C = 2 * Math.PI * R
   return (
     <Stage>
-      <div className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2">
+      <div className="absolute left-[36%] top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2">
         <svg viewBox="0 0 200 200" className="h-full w-full -rotate-90" fill="none" aria-hidden="true">
           <defs><linearGradient id={`ring-${id}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#3b9cff" /><stop offset="100%" stopColor="#01A95C" /></linearGradient></defs>
           <circle cx="100" cy="100" r={R} stroke="rgba(255,255,255,.1)" strokeWidth="10" />
@@ -52,7 +52,7 @@ function Certified() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-pd-gradient"><BadgeCheck className="h-5 w-5" /></span><span className="text-sm font-semibold">AI-certified team</span>
         </motion.div>
       </Float>
-      <Float className="absolute bottom-24 right-0" delay={1} dy={10} duration={6}>
+      <Float className="absolute -right-7 top-[calc(50%-1.75rem)]" delay={1} dy={10} duration={6}>
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.85, duration: 0.6 }} className={`${glass} flex items-center gap-3 px-4 py-3 text-white`}>
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-pd-blue"><GraduationCap className="h-5 w-5" /></span><span className="text-sm font-semibold leading-tight">Active certifications,<br />always current</span>
         </motion.div>

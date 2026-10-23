@@ -3,7 +3,7 @@ import { Sparkles } from 'lucide-react'
 import Seo from '../components/Seo'
 import Reveal from '../components/Reveal'
 import LeadForm from '../components/LeadForm'
-import { SectionHeading, PageHero, CtaBand } from '../components/ui'
+import { SectionHeading, PageHero, DarkCta } from '../components/ui'
 import HalftoneLogo from '../components/ui/halftone-logo'
 import { products } from '../data/site'
 import rentasstLogo from '../assets/products/nav/rentasst.png'
@@ -50,7 +50,7 @@ export default function ProductPage() {
           </div>
         </section>
       )}
-      <CtaBand title={`Want to see ${p.name} in action?`} body="Talk to our team and we will show you how it fits your business." cta="Talk to us" />
+      <DarkCta title={`Want to see ${p.name} in action?`} body="Talk to our team and we will show you how it fits your business." cta="Talk to us" />
     </>
   )
 }

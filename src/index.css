@@ -24,7 +24,7 @@
 }
 /* Laptop screens: fit the whole hero (header + slide + controls + strip) in one viewport */
 @media (min-width: 1024px) and (max-height: 900px) {
-  .hero-main { min-height: 0; height: calc(100svh - 190px); min-height: 380px; padding-top: 1rem; padding-bottom: 1rem; gap: 1.5rem; }
+  .hero-main { height: calc(100svh - 190px) !important; min-height: 380px !important; padding-top: 1rem !important; padding-bottom: 1rem !important; gap: 1.5rem !important; }
   .hero-main h1 { font-size: clamp(2rem, 6.5svh, 3.25rem); margin-top: 0.75rem; }
   .hero-main p { margin-top: 1rem; font-size: 1rem; }
   .hero-main .mt-8 { margin-top: 1.25rem; }

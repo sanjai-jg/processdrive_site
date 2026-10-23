@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Check } from 'lucide-react'
 import NetworkBg from './NetworkBg'
 import Reveal from './Reveal'
 import { footerCta } from '../data/site'
@@ -45,5 +45,32 @@ export function CtaBand({ title = footerCta.title, body = footerCta.body, cta = 
         <Link to={to} className="btn btn-primary mt-8">{cta}<ArrowRight className="h-4 w-4" /></Link>
       </Reveal>
     </section>
+  )
+}
+
+// closing call to action used on service and product pages: a dark panel, headline on the left, contact card on the right
+export function DarkCta({ title, body, cta, to = '/contact-us' }) {
+  return (
+  <section className="bg-white py-16 sm:py-24">
+    <div className="container-pd">
+      <Reveal className="relative overflow-hidden rounded-[2rem] bg-pd-navy text-white shadow-glow">
+        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(55%_90%_at_0%_0%,rgba(0,120,232,.38),transparent),radial-gradient(45%_80%_at_100%_100%,rgba(1,169,92,.30),transparent)]" />
+        <NetworkBg className="opacity-40" />
+        <div className="relative grid items-center gap-10 p-8 sm:p-12 lg:grid-cols-[1.2fr_.8fr] lg:gap-14 lg:p-16">
+          <div>
+            <span className="eyebrow !border-white/20 !bg-white/10 !text-white/80">Let’s talk</span>
+            <h2 className="mt-5 text-3xl font-bold leading-tight sm:text-4xl lg:text-[2.75rem]">{title}</h2>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">{body}</p>
+          </div>
+          <div className="rounded-2xl border border-white/15 bg-white/[0.07] p-6 backdrop-blur-md sm:p-8">
+            <ul className="space-y-3.5">
+              {['ISMS certified', 'AI-certified team', 'Built to scale'].map((t) => <li key={t} className="flex items-center gap-3 text-sm font-medium text-white/90"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-pd-green/20 text-pd-green"><Check className="h-4 w-4" /></span>{t}</li>)}
+            </ul>
+            <Link to={to} className="btn btn-primary mt-7 w-full">{cta}<ArrowRight className="h-4 w-4" /></Link>
+          </div>
+        </div>
+      </Reveal>
+    </div>
+  </section>
   )
 }
