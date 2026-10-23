@@ -7,6 +7,25 @@ import { visuals } from './HeroVisuals'
 import { slides, strip } from '../data/site'
 
 const DURATION = 7000
+const VISUAL_W = 448, VISUAL_H = 432 // the slide scenes are drawn on a 28rem x 27rem stage
+
+// shrinks the scene to fit narrow screens (instead of hiding it), keeping its layout exactly as designed
+function FitVisual({ children }) {
+  const box = useRef(null)
+  const [k, setK] = useState(1)
+  useEffect(() => {
+    const el = box.current
+    const fit = () => setK(Math.min(1, el.clientWidth / VISUAL_W))
+    fit()
+    const ro = new ResizeObserver(fit); ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return (
+    <div ref={box} className="mx-auto mt-2 w-full max-w-md sm:mt-0" style={{ height: VISUAL_H * k }}>
+      <div style={{ width: VISUAL_W, height: VISUAL_H, transform: 'scale(' + k + ')', transformOrigin: 'top left' }}>{children}</div>
+    </div>
+  )
+}
 
 export default function Hero() {
   const [i, setI] = useState(0)
@@ -39,7 +58,7 @@ export default function Hero() {
       onTouchStart={(e) => (touch.current = e.touches[0].clientX)} onTouchEnd={(e) => { const d = e.changedTouches[0].clientX - touch.current; if (Math.abs(d) > 50) go(d < 0 ? 1 : -1) }}>
       <div className="absolute inset-0 bg-[radial-gradient(60%_80%_at_80%_20%,rgba(0,120,232,.35),transparent),radial-gradient(50%_70%_at_10%_90%,rgba(1,169,92,.25),transparent)]" />
       <NetworkBg className="opacity-80" />
-      <div className="hero-main container-pd relative grid min-h-[620px] items-center gap-10 py-12 lg:grid-cols-[1.15fr_.85fr] lg:py-20">
+      <div className="hero-main container-pd relative grid min-h-0 grid-cols-[minmax(0,1fr)] items-center gap-6 py-8 sm:min-h-[620px] sm:gap-10 sm:py-12 lg:grid-cols-[1.15fr_.85fr] lg:py-20">
         <div aria-live="polite">
           <AnimatePresence mode="wait">
             <motion.div key={s.id} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.5 }}>
@@ -54,9 +73,9 @@ export default function Hero() {
             </motion.div>
           </AnimatePresence>
         </div>
-        <div className="hero-visual hidden lg:block">
+        <div className="hero-visual">
           <AnimatePresence mode="wait">
-            <motion.div key={s.id} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }}><Visual /></motion.div>
+            <motion.div key={s.id} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }}><FitVisual><Visual /></FitVisual></motion.div>
           </AnimatePresence>
         </div>
       </div>
