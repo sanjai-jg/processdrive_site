@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
         <div className="container-pd flex flex-col items-center justify-between gap-3 pb-6 pt-14 text-xs sm:flex-row sm:pt-8">
           <p>© {new Date().getFullYear()} {company.name}</p>
-          <div className="flex gap-5"><Link to="/privacy-policy" className="hover:text-white">Privacy policy</Link><Link to="/terms-and-condition" className="hover:text-white">Terms &amp; conditions</Link></div>
+          <div className="flex gap-5"><Link to="/privacy-policy" className="hover:text-white">Privacy policy</Link></div>
         </div>
       </div>
     </footer>
