@@ -14,20 +14,21 @@ export function SectionHeading({ eyebrow, title, body, center = false, dark = fa
   )
 }
 
-export function PageHero({ eyebrow, title, sub, cta, to = '/contact-us', tagline, children }) {
+export function PageHero({ eyebrow, title, sub, cta, to = '/contact-us', tagline, children, aside, external }) {
   return (
     <section className="relative -mt-[88px] overflow-hidden bg-pd-navy pt-[88px] text-white">
       <div className="absolute inset-0 bg-[radial-gradient(60%_90%_at_85%_10%,rgba(0,120,232,.35),transparent),radial-gradient(40%_70%_at_5%_100%,rgba(1,169,92,.25),transparent)]" />
       <NetworkBg className="opacity-50" />
-      <div className="container-pd relative py-16 sm:py-24">
+      <div className={"container-pd relative " + (aside ? "pb-14 pt-6 sm:pb-16 sm:pt-8 grid items-center gap-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-14" : "py-16 sm:py-24")}>
         <Reveal className="max-w-3xl">
           {eyebrow && <span className="eyebrow !border-white/20 !bg-white/10 !text-white/80">{eyebrow}</span>}
           <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-6xl">{title}</h1>
           {sub && <p className="mt-6 text-lg leading-relaxed text-white/75">{sub}</p>}
           {tagline && <p className="mt-4 font-display text-sm font-semibold tracking-wide text-emerald-400">{tagline}</p>}
-          {cta && <div className="mt-8"><Link to={to} className="btn btn-primary">{cta}<ArrowRight className="h-4 w-4" /></Link></div>}
+          {cta && <div className="mt-8">{external ? <a href={external} target="_blank" rel="noopener noreferrer" className="btn btn-primary">{cta}<ArrowRight className="h-4 w-4" /></a> : <Link to={to} className="btn btn-primary">{cta}<ArrowRight className="h-4 w-4" /></Link>}</div>}
           {children}
         </Reveal>
+        {aside && <Reveal delay={0.15}>{aside}</Reveal>}
       </div>
     </section>
   )

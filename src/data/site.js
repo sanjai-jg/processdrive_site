@@ -88,6 +88,7 @@ export const howWeBuild = {
 export const products = [
   {
     slug: 'rentasst',
+    url: 'https://rentasst.com/',
     name: 'RentAsst',
     tag: 'AI-powered rental business management',
     blurb: 'AI-powered rental business management platform helping operators automate booking, tracking, billing, and customer communication, built for tent house, event equipment, medical equipment, and 20+ rental categories across India.',
@@ -104,6 +105,7 @@ export const products = [
   },
   {
     slug: 'aim2c',
+    url: 'https://aim2c.com/',
     name: 'AIM2C',
     tag: 'Asset, Inspection, Maintenance to Compliance',
     // TODO: AI-framed description pending from ProcessDrive. Copy below is carried over from the current site.
@@ -120,6 +122,7 @@ export const products = [
   },
   {
     slug: 'ragifi',
+    url: 'https://ragifi.ai/',
     name: 'RAGifi',
     tag: 'The Ultimate Plug & Play RAG Solution',
     blurb: 'Zero configuration required. Simply connect your preferred LLM, choose your vector database, upload your data, and start having intelligent conversations. Ready in under 5 minutes.',

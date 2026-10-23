@@ -4,7 +4,14 @@ import Seo from '../components/Seo'
 import Reveal from '../components/Reveal'
 import LeadForm from '../components/LeadForm'
 import { SectionHeading, PageHero, CtaBand } from '../components/ui'
+import HalftoneLogo from '../components/ui/halftone-logo'
 import { products } from '../data/site'
+import rentasstLogo from '../assets/products/nav/rentasst.png'
+import aim2cLogo from '../assets/products/nav/aim2c.png'
+import ragifiLogo from '../assets/products/nav/ragifi.png'
+
+// the full logos are wide wordmarks; the hero dots use just the icon at the left, cropped as [x, y, w, h] fractions
+const logos = { rentasst: [rentasstLogo, [0, 0, 0.33, 1]], aim2c: [aim2cLogo, [0, 0, 0.31, 1]], ragifi: [ragifiLogo, [0, 0, 0.29, 1]] }
 
 export default function ProductPage() {
   const { slug } = useParams()
@@ -13,7 +20,9 @@ export default function ProductPage() {
   return (
     <>
       <Seo path={`/products/${p.slug}`} title={`${p.name} | ${p.tag} | ProcessDrive`} description={p.blurb} />
-      <PageHero eyebrow="Product" title={p.name} sub={p.status === 'soon' ? 'Coming soon.' : p.hero} cta={p.status === 'soon' ? undefined : 'Try now'} to="/contact-us">
+      <PageHero eyebrow="Product" title={p.name} sub={p.status === 'soon' ? 'Coming soon.' : p.hero} cta={p.status === 'soon' ? undefined : 'Try now'} to="/contact-us" external={p.url} aside={logos[p.slug] && (
+        <HalftoneLogo src={logos[p.slug][0]} crop={logos[p.slug][1]} background="transparent" grain={0} lift={0.45} dotGap={5} radius={80} scale={0.9} height="clamp(260px, 30vw, 380px)" className="touch-pan-y" />
+      )}>
         {p.status !== 'soon' && <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm"><Sparkles className="h-4 w-4 text-pd-green" />{p.stat}</p>}
       </PageHero>
       {p.features.length > 0 ? (

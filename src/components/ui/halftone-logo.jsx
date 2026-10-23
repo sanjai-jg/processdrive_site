@@ -13,11 +13,11 @@ export function hwfStep(x, y, vx, vy, hx, hy, px, py, r) {
   return [x + vx, y + vy, vx, vy]
 }
 
-export default function HalftoneLogo({ background = '#0A1020', dotGap = 6, radius = 90, grain = 0.5, scale = 0.78, height = '520px', className = '', children }) {
+export default function HalftoneLogo({ src = mark, crop = null, background = '#0A1020', dotGap = 6, radius = 90, grain = 0.5, lift = 0, scale = 0.78, height = '520px', className = '', children }) {
   const rootRef = useRef(null)
   const canvasRef = useRef(null)
   const opts = useRef({})
-  opts.current = { background, dotGap, radius, grain, scale }
+  opts.current = { src, crop, background, dotGap, radius, grain, lift, scale }
 
   useEffect(() => {
     const root = rootRef.current, canvas = canvasRef.current
@@ -38,9 +38,10 @@ export default function HalftoneLogo({ background = '#0A1020', dotGap = 6, radiu
       const mask = document.createElement('canvas'); mask.width = w; mask.height = h
       const m = mask.getContext('2d', { willReadFrequently: true })
       m.fillStyle = '#fff'; m.fillRect(0, 0, w, h)
-      const s = Math.min(h * o.scale, w * 0.9), ar = img.width / img.height
-      const dh = s, dw = s * ar
-      m.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh)
+      const [cx, cy, cw, ch] = o.crop || [0, 0, 1, 1]
+      const sx = img.width * cx, sy = img.height * cy, sw = img.width * cw, sh = img.height * ch, ar = sw / sh
+      const dw = Math.min(h * o.scale * ar, w * o.scale), dh = dw / ar
+      m.drawImage(img, sx, sy, sw, sh, (w - dw) / 2, (h - dh) / 2, dw, dh)
       const data = m.getImageData(0, 0, w, h).data
       const gap = Math.max(3, o.dotGap), cols = Math.ceil(w / gap), rows = Math.ceil(h / gap)
       const tmp = []
@@ -58,7 +59,7 @@ export default function HalftoneLogo({ background = '#0A1020', dotGap = 6, radiu
         cov /= 9
         if (cov < 0.08 || !n) continue
         const hx = gx * gap + gap / 2, hy = gy * gap + gap / 2
-        tmp.push(hx, hy, 0, 0, hx, hy, hwfRadius(cov, gap), r / n, g / n, b / n)
+        tmp.push(hx, hy, 0, 0, hx, hy, hwfRadius(cov, gap), r / n + (255 - r / n) * o.lift, g / n + (255 - g / n) * o.lift, b / n + (255 - b / n) * o.lift)
       }
       dots = new Float32Array(tmp); count = tmp.length / 10
       grainTile = document.createElement('canvas'); grainTile.width = grainTile.height = 256
@@ -72,7 +73,8 @@ export default function HalftoneLogo({ background = '#0A1020', dotGap = 6, radiu
       if (!img) return
       const o = opts.current
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      ctx.fillStyle = o.background; ctx.fillRect(0, 0, w, h)
+      if (o.background === 'transparent') ctx.clearRect(0, 0, w, h)
+      else { ctx.fillStyle = o.background; ctx.fillRect(0, 0, w, h) }
       const r = reduced ? 0 : o.radius
       const ringAge = ring.t < 0 ? 1e9 : now - ring.t, ringR = ringAge * 0.9
       let moving = false
@@ -112,13 +114,13 @@ export default function HalftoneLogo({ background = '#0A1020', dotGap = 6, radiu
 
     const image = new Image()
     image.onload = () => { if (!alive) return; img = image; layout(); draw(performance.now()); wake() }
-    image.src = mark
+    image.src = src
 
     root.addEventListener('pointermove', onMove); root.addEventListener('pointerleave', onLeave); root.addEventListener('pointerdown', onDown)
     const ro = new ResizeObserver(() => { layout(); wake() }); ro.observe(root)
     const io = new IntersectionObserver((en) => { visible = en[0] ? en[0].isIntersecting : true; if (visible) wake() }); io.observe(root)
     return () => { alive = false; cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); root.removeEventListener('pointermove', onMove); root.removeEventListener('pointerleave', onLeave); root.removeEventListener('pointerdown', onDown) }
-  }, [])
+  }, [src])
 
   return (
     <section ref={rootRef} className={`relative isolate w-full overflow-hidden ${className}`} style={{ height, background }}>
